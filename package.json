@@ -1,0 +1,25 @@
+{
+  "name": "threadvibe-apparel",
+  "version": "1.0.0",
+  "description": "ThreadVibe - Modern Fits for Everyday Living E-Commerce Storefront",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "fashion",
+    "ecommerce",
+    "whatsapp",
+    "sri-lanka",
+    "streetwear"
+  ],
+  "author": "ThreadVibe",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.9.4"
+  }
+}
