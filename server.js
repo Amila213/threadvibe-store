@@ -17,8 +17,15 @@ const MONGODB_URI = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb
 const DATA_DIR = path.join(__dirname, 'data');
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 
-// Ensure uploads directory exists
-if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+// Ensure uploads directory exists (safely handled for serverless/read-only environments like Vercel)
+try {
+  if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+  }
+} catch (err) {
+  // Read-only filesystem in serverless environments (e.g. Vercel/AWS Lambda /var/task)
+  console.log('ℹ️ Running in read-only / serverless environment; local uploads directory creation skipped.');
+}
 
 // Middleware
 app.use(cors());
@@ -418,26 +425,37 @@ app.post('/api/upload', (req, res) => {
     const body = req.body;
     if (!body.data) return res.status(400).json({ error: 'No image data provided' });
 
-    const matches = body.data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-    let ext = '.jpg';
-    let buffer;
+    // In serverless / read-only environment, or if local file storage cannot be written, fallback gracefully to returning data URL directly
+    try {
+      if (!fs.existsSync(UPLOADS_DIR)) {
+        fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+      }
 
-    if (matches && matches.length === 3) {
-      const mime = matches[1];
-      if (mime.includes('png')) ext = '.png';
-      else if (mime.includes('webp')) ext = '.webp';
-      else if (mime.includes('gif')) ext = '.gif';
-      buffer = Buffer.from(matches[2], 'base64');
-    } else {
-      buffer = Buffer.from(body.data, 'base64');
+      const matches = body.data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+      let ext = '.jpg';
+      let buffer;
+
+      if (matches && matches.length === 3) {
+        const mime = matches[1];
+        if (mime.includes('png')) ext = '.png';
+        else if (mime.includes('webp')) ext = '.webp';
+        else if (mime.includes('gif')) ext = '.gif';
+        buffer = Buffer.from(matches[2], 'base64');
+      } else {
+        buffer = Buffer.from(body.data, 'base64');
+      }
+
+      const filename = `tv_${Date.now()}_${Math.floor(Math.random() * 1000)}${ext}`;
+      const filePath = path.join(UPLOADS_DIR, filename);
+      fs.writeFileSync(filePath, buffer);
+
+      const fileUrl = `/uploads/${filename}`;
+      return res.json({ success: true, url: fileUrl, filename });
+    } catch (fsErr) {
+      // Graceful fallback for read-only / serverless (e.g. Vercel) - return base64 URL directly
+      console.warn('⚠️ File system write bypassed in serverless environment. Returning image payload directly:', fsErr.message);
+      return res.json({ success: true, url: body.data, filename: body.filename || 'uploaded_image' });
     }
-
-    const filename = `tv_${Date.now()}_${Math.floor(Math.random() * 1000)}${ext}`;
-    const filePath = path.join(UPLOADS_DIR, filename);
-    fs.writeFileSync(filePath, buffer);
-
-    const fileUrl = `/uploads/${filename}`;
-    res.json({ success: true, url: fileUrl, filename });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
