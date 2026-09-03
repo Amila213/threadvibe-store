@@ -798,8 +798,8 @@ function AdminApp() {
                 <span className="absolute bottom-0 right-0 h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-zinc-900" />
               </div>
               <div className="text-left">
-                <div className="text-xs font-bold text-slate-800 dark:text-white leading-tight">Dilshan P.</div>
-                <div className="text-[10px] sm:text-[11px] text-slate-400 dark:text-zinc-500">Store Manager</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-white leading-tight">Amila Saranga</div>
+                <div className="text-[10px] sm:text-[11px] text-slate-400 dark:text-zinc-500">Store Owner &amp; Manager</div>
               </div>
             </div>
 
