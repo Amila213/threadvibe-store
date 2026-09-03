@@ -88,6 +88,23 @@
     .animate-pulse-subtle {
       animation: pulse-subtle 2.5s infinite ease-in-out;
     }
+
+    /* Touch & Mobile Optimizations */
+    html, body {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .overflow-x-auto {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Scroll shadow indicator on mobile tables */
+    @media (max-width: 768px) {
+      .overflow-x-auto {
+        scrollbar-width: thin;
+      }
+    }
   </style>
 
   <!-- Favicon -->

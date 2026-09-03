@@ -693,34 +693,43 @@ function AdminApp() {
           SIDEBAR NAVIGATION
           ====================================================================== */}
       <aside className={`
-        fixed inset-y-0 left-0 z-40 w-64 flex-col justify-between border-r border-slate-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-[#0F1420]/95 backdrop-blur-xl transition-all duration-300 md:static md:flex
-        ${mobileMenuOpen ? 'flex translate-x-0 shadow-2xl' : '-translate-x-full md:translate-x-0'}
+        fixed inset-y-0 left-0 z-50 w-64 flex flex-col justify-between border-r border-slate-200/80 dark:border-zinc-800/80 bg-white/95 dark:bg-[#0F1420]/95 backdrop-blur-xl transition-all duration-300 md:static md:flex
+        ${mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:translate-x-0'}
       `}>
         {/* Sidebar Brand Header */}
         <div>
-          <div className="flex items-center justify-between px-6 py-6 border-b border-slate-100 dark:border-zinc-800/60">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-brand-500 to-amber-500 text-white shadow-glow-coral">
-                <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
+          <div className="flex items-center justify-between px-5 sm:px-6 py-5 sm:py-6 border-b border-slate-100 dark:border-zinc-800/60">
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-brand-500 to-amber-500 text-white shadow-glow-coral">
+                <svg width="18" height="18" viewBox="0 0 28 28" fill="none">
                   <path d="M6 7H22" stroke="#FFFFFF" strokeWidth="2.8" strokeLinecap="round"/>
                   <path d="M14 7V17C14 20.5 10 20.5 10 17V13C10 10.5 14 10.5 16 13.5L20.5 20.5" stroke="#FFFFFF" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
               <div>
-                <div className="font-display text-lg font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+                <div className="font-display text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
                   Thread<span className="text-brand-500">Vibe</span>
                 </div>
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-zinc-500">LK Streetwear</span>
               </div>
             </div>
 
-            <span className="px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider rounded-lg bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20">
-              Admin
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20">
+                Admin
+              </span>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white md:hidden"
+                aria-label="Close sidebar"
+              >
+                <Icon name="x" size={18} />
+              </button>
+            </div>
           </div>
 
           {/* Nav Items */}
-          <nav className="p-4 space-y-1.5">
+          <nav className="p-3 sm:p-4 space-y-1">
             {[
               { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', badge: null },
               { id: 'orders', label: 'Orders', icon: 'orders', badge: orders.filter(o => o.status === 'pending' || o.status === 'processing').length },
@@ -737,19 +746,19 @@ function AdminApp() {
                     setActiveTab(item.id);
                     setMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-semibold transition-all duration-200 ${
+                  className={`w-full flex items-center justify-between px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
                     isActive
                       ? 'bg-slate-900 text-white dark:bg-brand-500 dark:text-white shadow-soft font-bold'
                       : 'text-slate-600 hover:bg-slate-100 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-slate-200'
                   }`}
                 >
-                  <div className="flex items-center gap-3.5">
-                    <Icon name={item.icon} size={19} className={isActive ? 'text-white' : 'text-slate-400 dark:text-zinc-500'} />
+                  <div className="flex items-center gap-3">
+                    <Icon name={item.icon} size={18} className={isActive ? 'text-white' : 'text-slate-400 dark:text-zinc-500'} />
                     <span>{item.label}</span>
                   </div>
 
                   {item.badge !== null && item.badge !== undefined && (
-                    <span className={`px-2 py-0.5 text-xs rounded-full border ${
+                    <span className={`px-2 py-0.5 text-[11px] rounded-full border ${
                       isActive 
                         ? 'bg-white/20 text-white border-white/30' 
                         : item.badgeColor || 'bg-slate-200/80 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300 border-transparent'
@@ -764,33 +773,33 @@ function AdminApp() {
         </div>
 
         {/* Sidebar Footer: Profile Section & Theme Toggle */}
-        <div className="p-4 border-t border-slate-100 dark:border-zinc-800/60 space-y-3">
+        <div className="p-3 sm:p-4 border-t border-slate-100 dark:border-zinc-800/60 space-y-2.5 sm:space-y-3">
           
           {/* Live Storefront Quick Link */}
           <a
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl text-xs font-semibold text-slate-600 dark:text-zinc-300 bg-slate-100 dark:bg-zinc-800/60 hover:bg-slate-200 dark:hover:bg-zinc-800 transition"
+            className="flex items-center justify-center gap-2 w-full py-2 px-3 rounded-xl text-xs font-semibold text-slate-600 dark:text-zinc-300 bg-slate-100 dark:bg-zinc-800/60 hover:bg-slate-200 dark:hover:bg-zinc-800 transition"
           >
-            <Icon name="externalLink" size={14} />
+            <Icon name="externalLink" size={13} />
             <span>View Live Storefront</span>
           </a>
 
           {/* Profile Card & Dark Mode Toggle */}
-          <div className="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/60 dark:border-zinc-800/60">
-            <div className="flex items-center gap-2.5">
+          <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-2xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/60 dark:border-zinc-800/60">
+            <div className="flex items-center gap-2">
               <div className="relative">
                 <img
                   src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
                   alt="Admin Avatar"
-                  className="h-9 w-9 rounded-full object-cover border border-slate-200 dark:border-zinc-700"
+                  className="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover border border-slate-200 dark:border-zinc-700"
                 />
-                <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-zinc-900" />
+                <span className="absolute bottom-0 right-0 h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-zinc-900" />
               </div>
               <div className="text-left">
                 <div className="text-xs font-bold text-slate-800 dark:text-white leading-tight">Dilshan P.</div>
-                <div className="text-[11px] text-slate-400 dark:text-zinc-500">Store Manager</div>
+                <div className="text-[10px] sm:text-[11px] text-slate-400 dark:text-zinc-500">Store Manager</div>
               </div>
             </div>
 
@@ -798,9 +807,9 @@ function AdminApp() {
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-              className="flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-zinc-800 text-slate-600 dark:text-amber-400 border border-slate-200 dark:border-zinc-700 hover:scale-105 active:scale-95 shadow-sm transition"
+              className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-white dark:bg-zinc-800 text-slate-600 dark:text-amber-400 border border-slate-200 dark:border-zinc-700 hover:scale-105 active:scale-95 shadow-sm transition"
             >
-              <Icon name={isDarkMode ? "sun" : "moon"} size={16} />
+              <Icon name={isDarkMode ? "sun" : "moon"} size={15} />
             </button>
           </div>
         </div>
@@ -810,7 +819,7 @@ function AdminApp() {
       {mobileMenuOpen && (
         <div
           onClick={() => setMobileMenuOpen(false)}
-          className="fixed inset-0 z-30 bg-slate-900/40 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm md:hidden"
         />
       )}
 
@@ -820,18 +829,19 @@ function AdminApp() {
       <div className="flex-1 flex flex-col h-full overflow-y-auto">
         
         {/* Top Header Navbar */}
-        <header className="sticky top-0 z-20 flex items-center justify-between px-6 py-4 bg-white/80 dark:bg-[#0B0F17]/80 backdrop-blur-md border-b border-slate-200/80 dark:border-zinc-800/80">
-          <div className="flex items-center gap-3">
+        <header className="sticky top-0 z-20 flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-white/80 dark:bg-[#0B0F17]/80 backdrop-blur-md border-b border-slate-200/80 dark:border-zinc-800/80">
+          <div className="flex items-center gap-2.5 sm:gap-3">
             <button
               onClick={() => setMobileMenuOpen(true)}
               className="p-2 rounded-xl border border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-300 md:hidden hover:bg-slate-100 dark:hover:bg-zinc-800"
+              aria-label="Open sidebar menu"
             >
-              <Icon name="menu" size={20} />
+              <Icon name="menu" size={18} />
             </button>
             <div>
-              <h1 className="text-xl font-bold font-display text-slate-900 dark:text-white capitalize flex items-center gap-2">
-                {activeTab === 'dashboard' ? 'ThreadVibe Overview' : activeTab}
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 rounded-full border border-emerald-500/20">
+              <h1 className="text-base sm:text-xl font-bold font-display text-slate-900 dark:text-white capitalize flex items-center gap-1.5 sm:gap-2">
+                {activeTab === 'dashboard' ? 'Overview' : activeTab}
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] sm:text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 rounded-full border border-emerald-500/20">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live LK
                 </span>
               </h1>
@@ -842,22 +852,23 @@ function AdminApp() {
           </div>
 
           {/* Quick Action Buttons */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-2.5">
             <button
               onClick={fetchData}
               disabled={isRefreshing}
               title="Refresh Data"
-              className="p-2.5 rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 transition"
+              className="p-2 sm:p-2.5 rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 transition"
             >
-              <Icon name="refresh" size={17} className={isRefreshing ? 'animate-spin text-brand-500' : ''} />
+              <Icon name="refresh" size={16} className={isRefreshing ? 'animate-spin text-brand-500' : ''} />
             </button>
 
             <button
               onClick={handleOpenAddProduct}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-brand-500 to-amber-600 hover:from-brand-600 hover:to-amber-700 text-white text-xs font-bold shadow-soft hover:shadow-glow-coral transition active:scale-95"
+              className="flex items-center gap-1.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl bg-gradient-to-r from-brand-500 to-amber-600 hover:from-brand-600 hover:to-amber-700 text-white text-xs font-bold shadow-soft hover:shadow-glow-coral transition active:scale-95"
             >
-              <Icon name="plus" size={16} />
-              <span>Add New Fit</span>
+              <Icon name="plus" size={15} />
+              <span className="hidden sm:inline">Add New Fit</span>
+              <span className="sm:hidden">New Fit</span>
             </button>
           </div>
         </header>
@@ -865,7 +876,7 @@ function AdminApp() {
         {/* ====================================================================
             TAB CONTENT ROUTING
             ==================================================================== */}
-        <div className="p-6 space-y-6 max-w-7xl w-full mx-auto">
+        <div className="p-3.5 sm:p-6 space-y-4 sm:space-y-6 max-w-7xl w-full mx-auto">
           
           {/* TAB 1: DASHBOARD OVERVIEW */}
           {activeTab === 'dashboard' && (
@@ -1089,8 +1100,8 @@ function AdminApp() {
                     </button>
                   </div>
 
-                  <div className="overflow-x-auto -mx-6 px-6">
-                    <table className="w-full text-left text-xs border-collapse">
+                  <div className="overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
+                    <table className="w-full text-left text-xs border-collapse min-w-[580px]">
                       <thead>
                         <tr className="border-b border-slate-100 dark:border-zinc-800/80 text-slate-400 dark:text-zinc-500 font-bold uppercase tracking-wider">
                           <th className="pb-3 font-semibold">Order ID</th>
@@ -1261,29 +1272,29 @@ function AdminApp() {
 
           {/* TAB 2: ORDERS MANAGEMENT */}
           {activeTab === 'orders' && (
-            <div className="p-6 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200/80 dark:border-zinc-800/80 shadow-soft space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200/80 dark:border-zinc-800/80 shadow-soft space-y-4 sm:space-y-5">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3.5">
                 <div>
-                  <h2 className="text-lg font-bold font-display text-slate-900 dark:text-white">Customer Orders Management</h2>
+                  <h2 className="text-base sm:text-lg font-bold font-display text-slate-900 dark:text-white">Customer Orders Management</h2>
                   <p className="text-xs text-slate-500 dark:text-zinc-400">Search by customer name, phone number, or filter by order fulfillment state.</p>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="relative">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
+                  <div className="relative flex-1 sm:flex-none">
                     <Icon name="search" size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search orders..."
-                      className="pl-9 pr-4 py-2 rounded-xl text-xs bg-slate-50 dark:bg-zinc-800/60 border border-slate-200 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      className="w-full sm:w-56 pl-9 pr-4 py-2 rounded-xl text-xs bg-slate-50 dark:bg-zinc-800/60 border border-slate-200 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-brand-500"
                     />
                   </div>
 
                   <select
                     value={orderStatusFilter}
                     onChange={(e) => setOrderStatusFilter(e.target.value)}
-                    className="px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-zinc-800/60 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-200 focus:outline-none"
+                    className="w-full sm:w-auto px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-zinc-800/60 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-200 focus:outline-none"
                   >
                     <option value="all">All Statuses</option>
                     <option value="pending">Pending</option>
@@ -1294,8 +1305,8 @@ function AdminApp() {
                 </div>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
+              <div className="overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
+                <table className="w-full text-left text-xs border-collapse min-w-[720px]">
                   <thead>
                     <tr className="border-b border-slate-100 dark:border-zinc-800 text-slate-400 dark:text-zinc-500 font-bold uppercase tracking-wider">
                       <th className="pb-3">Order #</th>
@@ -1384,29 +1395,29 @@ function AdminApp() {
 
           {/* TAB 3: INVENTORY CATALOG */}
           {activeTab === 'inventory' && (
-            <div className="p-6 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200/80 dark:border-zinc-800/80 shadow-soft space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200/80 dark:border-zinc-800/80 shadow-soft space-y-4 sm:space-y-5">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3.5">
                 <div>
-                  <h2 className="text-lg font-bold font-display text-slate-900 dark:text-white">Apparel Inventory Catalog</h2>
+                  <h2 className="text-base sm:text-lg font-bold font-display text-slate-900 dark:text-white">Apparel Inventory Catalog</h2>
                   <p className="text-xs text-slate-500 dark:text-zinc-400">Manage products, high-resolution front & back shots, pricing, and stock levels.</p>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="relative">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
+                  <div className="relative flex-1 sm:flex-none">
                     <Icon name="search" size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search fits..."
-                      className="pl-9 pr-4 py-2 rounded-xl text-xs bg-slate-50 dark:bg-zinc-800/60 border border-slate-200 dark:border-zinc-700 focus:outline-none"
+                      className="w-full sm:w-48 pl-9 pr-4 py-2 rounded-xl text-xs bg-slate-50 dark:bg-zinc-800/60 border border-slate-200 dark:border-zinc-700 focus:outline-none"
                     />
                   </div>
 
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-zinc-800/60 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-200 focus:outline-none"
+                    className="w-full sm:w-auto px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-zinc-800/60 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-200 focus:outline-none"
                   >
                     <option value="all">All Categories</option>
                     <option value="tees">Oversized Tees & Hoodies</option>
@@ -1417,15 +1428,15 @@ function AdminApp() {
 
                   <button
                     onClick={handleOpenAddProduct}
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold transition"
+                    className="flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold transition"
                   >
                     <Icon name="plus" size={15} /> Add Fit
                   </button>
                 </div>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
+              <div className="overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
+                <table className="w-full text-left text-xs border-collapse min-w-[660px]">
                   <thead>
                     <tr className="border-b border-slate-100 dark:border-zinc-800 text-slate-400 dark:text-zinc-500 font-bold uppercase tracking-wider">
                       <th className="pb-3">Product & Angles</th>
@@ -1752,8 +1763,8 @@ function AdminApp() {
 
       {/* 1. Add / Edit Product Modal */}
       {isProductModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
-          <div className="relative w-full max-w-xl rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-zinc-800 shadow-2xl p-6 my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+          <div className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-zinc-800 shadow-2xl p-4 sm:p-6 my-auto">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-zinc-800">
               <h3 className="font-display text-base font-bold text-slate-900 dark:text-white">
                 {editingProduct ? 'Edit Apparel Fit' : 'Add New Apparel Drop'}
@@ -1895,8 +1906,8 @@ function AdminApp() {
 
       {/* 2. Order Details & Bank Slip Modal */}
       {selectedOrderForModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
-          <div className="relative w-full max-w-lg rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-zinc-800 shadow-2xl p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+          <div className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-zinc-800 shadow-2xl p-4 sm:p-6 my-auto">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-zinc-800">
               <h3 className="font-display text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 Order #{selectedOrderForModal.orderId}

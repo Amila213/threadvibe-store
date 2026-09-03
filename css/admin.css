@@ -734,11 +734,39 @@ body {
   }
 }
 
+@media (max-width: 768px) {
+  .admin-main {
+    padding: 1rem;
+  }
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table-responsive table {
+    min-width: 600px;
+  }
+  .toolbar-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .modal-dialog {
+    width: 95vw;
+    max-height: 92vh;
+    padding: 1.25rem;
+  }
+}
+
 @media (max-width: 640px) {
   .stats-grid {
     grid-template-columns: 1fr;
   }
   .form-grid-2, .form-grid-3, .image-upload-row {
     grid-template-columns: 1fr;
+  }
+  .admin-toast {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
   }
 }
