@@ -464,9 +464,17 @@ app.post('/api/upload', (req, res) => {
 // ==========================================
 // 5. STATIC FILES & HTML SERVING
 // ==========================================
-app.use(express.static(__dirname));
+app.use('/css', express.static(path.join(__dirname, 'css')));
+app.use('/js', express.static(path.join(__dirname, 'js')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/data', express.static(path.join(__dirname, 'data')));
+app.use(express.static(path.join(__dirname)));
 
 app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+app.get('/admin.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
