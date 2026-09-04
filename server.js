@@ -462,21 +462,37 @@ app.post('/api/upload', (req, res) => {
 });
 
 // ==========================================
-// 5. STATIC FILES & HTML SERVING
+// 5. ADMIN AUTH VERIFICATION API
+// ==========================================
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+
+app.post('/api/admin/verify', (req, res) => {
+  try {
+    const { pin, password } = req.body || {};
+    const entered = (pin !== undefined && pin !== null ? pin : password);
+    if (entered && String(entered).trim() === String(ADMIN_PASSWORD).trim()) {
+      return res.json({ success: true, message: 'Admin authentication successful' });
+    }
+    return res.status(401).json({ success: false, error: 'Incorrect Admin PIN or Password' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==========================================
+// 6. STATIC FILES & HTML SERVING
 // ==========================================
 app.use('/css', express.static(path.join(__dirname, 'css')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/data', express.static(path.join(__dirname, 'data')));
+
+// Ensure /admin, /admin.html, /admin/ are explicitly served before generic static fallbacks
+app.get(['/admin', '/admin.html', '/admin/'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
 app.use(express.static(path.join(__dirname)));
-
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
-});
-
-app.get('/admin.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
-});
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

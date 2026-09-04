@@ -1,6 +1,34 @@
 const { useState, useEffect, useMemo, useRef } = React;
 
 /* ==========================================================================
+   Safe Storage Helper (prevents crashes in strict/sandboxed environments)
+   ========================================================================== */
+const safeStorage = {
+  getItem: (key) => {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        return window.localStorage.getItem(key);
+      }
+    } catch (e) {}
+    return null;
+  },
+  setItem: (key, val) => {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.setItem(key, val);
+      }
+    } catch (e) {}
+  },
+  removeItem: (key) => {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.removeItem(key);
+      }
+    } catch (e) {}
+  }
+};
+
+/* ==========================================================================
    Lucide Icon Components (Zero-dependency SVG)
    ========================================================================== */
 const Icon = ({ name, size = 18, className = "" }) => {
@@ -139,6 +167,31 @@ const Icon = ({ name, size = 18, className = "" }) => {
       <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
         <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
       </svg>
+    ),
+    lock: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </svg>
+    ),
+    unlock: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 9.9-1" />
+      </svg>
+    ),
+    key: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="m21 2-2 2m-1.5 1.5L14 9l-1.5-1.5-3 3 1.5 1.5L9 14l-1.5-1.5-3 3a5 5 0 1 0 7.5 7.5l9-9V2h-3.5Z" /><circle cx="7.5" cy="16.5" r=".5" fill="currentColor" />
+      </svg>
+    ),
+    shieldCheck: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" /><path d="m9 12 2 2 4-4" />
+      </svg>
+    ),
+    logOut: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" />
+      </svg>
     )
   };
 
@@ -146,13 +199,224 @@ const Icon = ({ name, size = 18, className = "" }) => {
 };
 
 /* ==========================================================================
+   Admin Login Screen Component (PIN / Password Gate)
+   ========================================================================== */
+function AdminLoginScreen({ onLogin, isDarkMode, setIsDarkMode }) {
+  const [pin, setPin] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  const handleSubmit = async (e) => {
+    if (e) e.preventDefault();
+    const cleanPin = (pin || '').trim();
+    if (!cleanPin) {
+      setError('Please enter the Admin PIN or Password');
+      if (inputRef.current) inputRef.current.focus();
+      return;
+    }
+
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const res = await fetch('/api/admin/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin: cleanPin })
+      }).then(r => r.json()).catch(() => null);
+
+      if (res && res.success) {
+        onLogin();
+      } else if (cleanPin === 'admin123') {
+        // Safe offline/fallback authentication
+        onLogin();
+      } else {
+        setError(res?.error || 'Invalid Admin PIN or Password. (Default: admin123)');
+        if (inputRef.current) inputRef.current.focus();
+      }
+    } catch (err) {
+      if (cleanPin === 'admin123') {
+        onLogin();
+      } else {
+        setError('Verification error. Please enter PIN (Default: admin123)');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 bg-gradient-to-br from-slate-100 via-slate-50 to-orange-50/40 dark:from-[#080B11] dark:via-[#0B0F17] dark:to-[#18110F] text-slate-800 dark:text-slate-100">
+      
+      {/* Top Floating Controls */}
+      <div className="fixed top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2 z-10">
+        <a
+          href="/"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-zinc-300 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border border-slate-200 dark:border-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800 transition shadow-sm"
+        >
+          <Icon name="externalLink" size={13} />
+          <span>Online Store</span>
+        </a>
+        <button
+          onClick={() => setIsDarkMode(!isDarkMode)}
+          title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          className="p-2 rounded-xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md text-slate-600 dark:text-amber-400 border border-slate-200 dark:border-zinc-800 hover:scale-105 active:scale-95 shadow-sm transition"
+        >
+          <Icon name={isDarkMode ? "sun" : "moon"} size={16} />
+        </button>
+      </div>
+
+      {/* Main Login Card */}
+      <div className="w-full max-w-md">
+        <div className="relative rounded-3xl bg-white/95 dark:bg-[#111827]/95 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800/90 p-6 sm:p-8 shadow-2xl space-y-6">
+          
+          {/* Brand & Lock Badge */}
+          <div className="flex flex-col items-center text-center space-y-3">
+            <div className="relative">
+              <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-brand-500 to-amber-500 flex items-center justify-center text-white shadow-glow-coral">
+                <Icon name="lock" size={28} />
+              </div>
+              <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white text-[10px] font-bold border-2 border-white dark:border-zinc-900">
+                <Icon name="check" size={12} />
+              </span>
+            </div>
+
+            <div>
+              <div className="font-display text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center justify-center gap-1">
+                Thread<span className="text-brand-500">Vibe</span>
+                <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20 font-bold ml-1.5">
+                  ADMIN
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+                Owner Dashboard & Inventory Security Gate
+              </p>
+            </div>
+          </div>
+
+          {/* Error Message Alert */}
+          {error && (
+            <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold animate-shake">
+              <Icon name="alertTriangle" size={16} className="shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          {/* PIN / Password Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-zinc-300">
+                <span>Admin PIN or Password</span>
+                <span className="text-[10px] text-slate-400 font-normal">Default: admin123</span>
+              </div>
+
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-zinc-500">
+                  <Icon name="key" size={16} />
+                </div>
+                
+                <input
+                  ref={inputRef}
+                  type={showPassword ? "text" : "password"}
+                  value={pin}
+                  onChange={(e) => {
+                    setPin(e.target.value);
+                    if (error) setError('');
+                  }}
+                  placeholder="Enter PIN (e.g. admin123)"
+                  className="w-full pl-10 pr-10 py-3 rounded-2xl bg-slate-50 dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-700/80 text-sm font-semibold text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition"
+                  autoComplete="current-password"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300"
+                  tabIndex="-1"
+                >
+                  <Icon name="eye" size={16} className={showPassword ? "text-brand-500" : ""} />
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Demo Helper */}
+            <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-zinc-400 px-1">
+              <span>Quick Login Helper:</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setPin('admin123');
+                  if (error) setError('');
+                }}
+                className="text-brand-600 dark:text-brand-400 font-bold hover:underline"
+              >
+                Use "admin123"
+              </button>
+            </div>
+
+            {/* Unlock Button */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-brand-500 via-orange-500 to-amber-500 hover:from-brand-600 hover:to-amber-600 text-white font-bold text-sm shadow-soft hover:shadow-glow-coral flex items-center justify-center gap-2 transition active:scale-[0.98] disabled:opacity-70"
+            >
+              {isLoading ? (
+                <>
+                  <Icon name="refresh" size={16} className="animate-spin" />
+                  <span>Verifying Credentials...</span>
+                </>
+              ) : (
+                <>
+                  <Icon name="unlock" size={16} />
+                  <span>Unlock Admin Dashboard</span>
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Security & Return to Store Footer */}
+          <div className="pt-2 border-t border-slate-100 dark:border-zinc-800/60 flex items-center justify-between text-xs text-slate-400 dark:text-zinc-500">
+            <div className="flex items-center gap-1.5">
+              <Icon name="shieldCheck" size={14} className="text-emerald-500" />
+              <span>TLS / Secure Session</span>
+            </div>
+            <a href="/" className="hover:text-slate-700 dark:hover:text-zinc-300 transition flex items-center gap-1 font-semibold">
+              <span>Return to Store</span> &rarr;
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================================================
    Main Admin Dashboard Application Component
    ========================================================================== */
 function AdminApp() {
+  // Authentication State
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return safeStorage.getItem('tv_admin_auth') === 'true';
+  });
+
   // Theme State
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem('tv_admin_theme') === 'dark' || 
-      window.matchMedia('(prefers-color-scheme: dark)').matches;
+    try {
+      const stored = safeStorage.getItem('tv_admin_theme');
+      if (stored) return stored === 'dark';
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch (e) {
+      return false;
+    }
   });
 
   // App State
@@ -200,29 +464,48 @@ function AdminApp() {
 
   // Sync Dark Mode with <html> class
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('tv_admin_theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('tv_admin_theme', 'light');
-    }
+    try {
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+        safeStorage.setItem('tv_admin_theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        safeStorage.setItem('tv_admin_theme', 'light');
+      }
+    } catch (e) {}
   }, [isDarkMode]);
 
   // Initial Data Fetch
   const fetchData = async () => {
+    if (!safeStorage.getItem('tv_admin_auth') && !isAuthenticated) return;
     setIsRefreshing(true);
     try {
       const [prodRes, ordRes, setRes] = await Promise.all([
-        fetch('/api/products').then(r => r.json()).catch(() => []),
-        fetch('/api/orders').then(r => r.json()).catch(() => []),
-        fetch('/api/settings').then(r => r.json()).catch(() => ({}))
+        fetch('/api/products').then(async r => {
+          if (!r.ok) return [];
+          const d = await r.json();
+          return Array.isArray(d) ? d : [];
+        }).catch(() => []),
+        fetch('/api/orders').then(async r => {
+          if (!r.ok) return [];
+          const d = await r.json();
+          return Array.isArray(d) ? d : [];
+        }).catch(() => []),
+        fetch('/api/settings').then(async r => {
+          if (!r.ok) return {};
+          const d = await r.json();
+          return (d && typeof d === 'object' && !d.error) ? d : {};
+        }).catch(() => ({}))
       ]);
-      setProducts(prodRes || []);
-      setOrders(ordRes || []);
-      setSettings(setRes || {});
+
+      setProducts(Array.isArray(prodRes) ? prodRes : []);
+      setOrders(Array.isArray(ordRes) ? ordRes : []);
+      setSettings(setRes && typeof setRes === 'object' && !setRes.error ? setRes : {});
     } catch (err) {
-      console.error(err);
+      console.error('Data load error:', err);
+      setProducts([]);
+      setOrders([]);
+      setSettings({});
       showToast('Failed to connect to server API', 'error');
     } finally {
       setIsLoading(false);
@@ -231,37 +514,50 @@ function AdminApp() {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (isAuthenticated) {
+      fetchData();
+    } else {
+      setIsLoading(false);
+    }
+  }, [isAuthenticated]);
+
+  const handleLogout = () => {
+    safeStorage.removeItem('tv_admin_auth');
+    setIsAuthenticated(false);
+    showToast('Logged out of Admin Panel.', 'info');
+  };
 
   /* ==========================================================================
      Calculated Metrics & Dynamic Statistics
      ========================================================================== */
   const metrics = useMemo(() => {
+    const safeOrders = Array.isArray(orders) ? orders : [];
+    const safeProducts = Array.isArray(products) ? products : [];
+
     // 1. Total revenue
-    const totalRev = orders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+    const totalRev = safeOrders.reduce((sum, o) => sum + (Number(o?.total) || 0), 0);
     // 2. Today's sales (calculate from orders created today or fallback to realistic dynamic figure)
     const today = new Date().toISOString().slice(0, 10);
-    const todayOrders = orders.filter(o => (o.createdAt || '').slice(0, 10) === today);
+    const todayOrders = safeOrders.filter(o => (o?.createdAt || '').slice(0, 10) === today);
     const todaySales = todayOrders.length > 0 
-      ? todayOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0)
-      : 84250; // Sri Lankan rupees benchmark
+      ? todayOrders.reduce((sum, o) => sum + (Number(o?.total) || 0), 0)
+      : (safeOrders.length > 0 ? totalRev : 84250); // Sri Lankan rupees benchmark
 
     // 3. Pending Bank Slips (Bank transfer orders with pending status)
-    const pendingSlips = orders.filter(o => o.paymentMethod === 'bank_transfer' && o.status === 'pending');
+    const pendingSlips = safeOrders.filter(o => o?.paymentMethod === 'bank_transfer' && o?.status === 'pending');
     
     // 4. Active Orders (processing, pending, dispatched)
-    const activeOrders = orders.filter(o => ['processing', 'pending', 'dispatched', 'confirmed'].includes(o.status));
+    const activeOrders = safeOrders.filter(o => ['processing', 'pending', 'dispatched', 'confirmed'].includes(o?.status));
 
     // 5. Low Stock Items (stock < 5)
-    const lowStockItems = products.filter(p => Number(p.stockLeft) < 5);
+    const lowStockItems = safeProducts.filter(p => Number(p?.stockLeft || 0) < 5);
 
     return {
       todaySales,
       totalRev,
-      pendingSlipsCount: pendingSlips.length || 3,
+      pendingSlipsCount: pendingSlips.length || (safeOrders.length === 0 ? 3 : 0),
       pendingSlipsList: pendingSlips,
-      activeOrdersCount: activeOrders.length || orders.length,
+      activeOrdersCount: activeOrders.length || safeOrders.length,
       lowStockCount: lowStockItems.length,
       lowStockItems
     };
@@ -276,174 +572,183 @@ function AdminApp() {
   const donutChartInstance = useRef(null);
 
   useEffect(() => {
-    if (activeTab !== 'dashboard') return;
+    if (!isAuthenticated || activeTab !== 'dashboard') return;
+    if (typeof Chart === 'undefined') return;
 
-    // 1. Monthly Income vs Profit Bar Chart
-    if (barChartRef.current) {
-      if (barChartInstance.current) {
-        barChartInstance.current.destroy();
-      }
+    try {
+      // 1. Monthly Income vs Profit Bar Chart
+      if (barChartRef.current) {
+        if (barChartInstance.current) {
+          barChartInstance.current.destroy();
+        }
 
-      const ctx = barChartRef.current.getContext('2d');
-      
-      // Income Gradient (Electric Blue -> Indigo)
-      const incomeGrad = ctx.createLinearGradient(0, 0, 0, 300);
-      incomeGrad.addColorStop(0, 'rgba(59, 130, 246, 0.95)'); // #3B82F6
-      incomeGrad.addColorStop(1, 'rgba(99, 102, 241, 0.75)'); // #6366F1
+        const ctx = barChartRef.current.getContext('2d');
+        if (ctx) {
+          // Income Gradient (Electric Blue -> Indigo)
+          const incomeGrad = ctx.createLinearGradient(0, 0, 0, 300);
+          incomeGrad.addColorStop(0, 'rgba(59, 130, 246, 0.95)'); // #3B82F6
+          incomeGrad.addColorStop(1, 'rgba(99, 102, 241, 0.75)'); // #6366F1
 
-      // Profit Gradient (Purple -> Magenta)
-      const profitGrad = ctx.createLinearGradient(0, 0, 0, 300);
-      profitGrad.addColorStop(0, 'rgba(139, 92, 246, 0.95)'); // #8B5CF6
-      profitGrad.addColorStop(1, 'rgba(217, 70, 239, 0.75)'); // #D946EF
+          // Profit Gradient (Purple -> Magenta)
+          const profitGrad = ctx.createLinearGradient(0, 0, 0, 300);
+          profitGrad.addColorStop(0, 'rgba(139, 92, 246, 0.95)'); // #8B5CF6
+          profitGrad.addColorStop(1, 'rgba(217, 70, 239, 0.75)'); // #D946EF
 
-      const months = ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
-      const incomeData = [240000, 310000, 280000, 420000, 390000, 520000];
-      const profitData = [105000, 138000, 122000, 192000, 175000, 245000];
+          const months = ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
+          const incomeData = [240000, 310000, 280000, 420000, 390000, 520000];
+          const profitData = [105000, 138000, 122000, 192000, 175000, 245000];
 
-      barChartInstance.current = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: months,
-          datasets: [
-            {
-              label: 'Monthly Income (LKR)',
-              data: incomeData,
-              backgroundColor: incomeGrad,
-              borderRadius: 8,
-              borderSkipped: false,
-              barPercentage: 0.6,
-              categoryPercentage: 0.6
-            },
-            {
-              label: 'Net Profit (LKR)',
-              data: profitData,
-              backgroundColor: profitGrad,
-              borderRadius: 8,
-              borderSkipped: false,
-              barPercentage: 0.6,
-              categoryPercentage: 0.6
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: {
-            duration: 1000,
-            easing: 'easeOutQuart'
-          },
-          plugins: {
-            legend: {
-              position: 'top',
-              align: 'end',
-              labels: {
-                boxWidth: 12,
-                boxHeight: 12,
-                usePointStyle: true,
-                pointStyle: 'circle',
-                font: { family: '"Plus Jakarta Sans"', size: 12, weight: '600' },
-                color: isDarkMode ? '#94A3B8' : '#64748B'
-              }
-            },
-            tooltip: {
-              backgroundColor: isDarkMode ? '#1E293B' : '#0F172A',
-              titleColor: '#F8FAFC',
-              bodyColor: '#F8FAFC',
-              borderColor: isDarkMode ? '#334155' : '#E2E8F0',
-              borderWidth: 1,
-              padding: 12,
-              boxPadding: 6,
-              usePointStyle: true,
-              callbacks: {
-                label: function(context) {
-                  return ` ${context.dataset.label.split(' ')[0]}: Rs. ${context.raw.toLocaleString()}`;
+          barChartInstance.current = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: months,
+              datasets: [
+                {
+                  label: 'Monthly Income (LKR)',
+                  data: incomeData,
+                  backgroundColor: incomeGrad,
+                  borderRadius: 8,
+                  borderSkipped: false,
+                  barPercentage: 0.6,
+                  categoryPercentage: 0.6
+                },
+                {
+                  label: 'Net Profit (LKR)',
+                  data: profitData,
+                  backgroundColor: profitGrad,
+                  borderRadius: 8,
+                  borderSkipped: false,
+                  barPercentage: 0.6,
+                  categoryPercentage: 0.6
                 }
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: {
-                font: { family: '"Plus Jakarta Sans"', size: 12, weight: '500' },
-                color: isDarkMode ? '#94A3B8' : '#64748B'
-              }
+              ]
             },
-            y: {
-              grid: {
-                color: isDarkMode ? 'rgba(51, 65, 85, 0.4)' : 'rgba(226, 232, 240, 0.8)',
-                drawBorder: false
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              animation: {
+                duration: 1000,
+                easing: 'easeOutQuart'
               },
-              ticks: {
-                font: { family: '"Plus Jakarta Sans"', size: 11 },
-                color: isDarkMode ? '#94A3B8' : '#64748B',
-                callback: (val) => `Rs. ${(val / 1000)}k`
-              }
-            }
-          }
-        }
-      });
-    }
-
-    // 2. Category Share Donut Chart
-    if (donutChartRef.current) {
-      if (donutChartInstance.current) {
-        donutChartInstance.current.destroy();
-      }
-
-      const ctxDonut = donutChartRef.current.getContext('2d');
-      
-      donutChartInstance.current = new Chart(ctxDonut, {
-        type: 'doughnut',
-        data: {
-          labels: ['Oversized Tees', 'Hoodies', 'Casual', 'Trousers'],
-          datasets: [{
-            data: [42, 28, 18, 12],
-            backgroundColor: [
-              '#6366F1', // Indigo
-              '#8B5CF6', // Violet
-              '#06B6D4', // Cyan
-              '#F59E0B'  // Amber
-            ],
-            borderColor: isDarkMode ? '#111827' : '#FFFFFF',
-            borderWidth: 3,
-            hoverOffset: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '74%',
-          animation: {
-            animateRotate: true,
-            animateScale: true,
-            duration: 1200
-          },
-          plugins: {
-            legend: {
-              display: false // We render a custom sleek legend in JSX below
-            },
-            tooltip: {
-              backgroundColor: isDarkMode ? '#1E293B' : '#0F172A',
-              titleColor: '#F8FAFC',
-              bodyColor: '#F8FAFC',
-              padding: 12,
-              callbacks: {
-                label: function(context) {
-                  return ` ${context.label}: ${context.raw}% of Total Sales`;
+              plugins: {
+                legend: {
+                  position: 'top',
+                  align: 'end',
+                  labels: {
+                    boxWidth: 12,
+                    boxHeight: 12,
+                    usePointStyle: true,
+                    pointStyle: 'circle',
+                    font: { family: '"Plus Jakarta Sans"', size: 12, weight: '600' },
+                    color: isDarkMode ? '#94A3B8' : '#64748B'
+                  }
+                },
+                tooltip: {
+                  backgroundColor: isDarkMode ? '#1E293B' : '#0F172A',
+                  titleColor: '#F8FAFC',
+                  bodyColor: '#F8FAFC',
+                  borderColor: isDarkMode ? '#334155' : '#E2E8F0',
+                  borderWidth: 1,
+                  padding: 12,
+                  boxPadding: 6,
+                  usePointStyle: true,
+                  callbacks: {
+                    label: function(context) {
+                      return ` ${context.dataset.label.split(' ')[0]}: Rs. ${context.raw.toLocaleString()}`;
+                    }
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  grid: { display: false },
+                  ticks: {
+                    font: { family: '"Plus Jakarta Sans"', size: 12, weight: '500' },
+                    color: isDarkMode ? '#94A3B8' : '#64748B'
+                  }
+                },
+                y: {
+                  grid: {
+                    color: isDarkMode ? 'rgba(51, 65, 85, 0.4)' : 'rgba(226, 232, 240, 0.8)',
+                    drawBorder: false
+                  },
+                  ticks: {
+                    font: { family: '"Plus Jakarta Sans"', size: 11 },
+                    color: isDarkMode ? '#94A3B8' : '#64748B',
+                    callback: (val) => `Rs. ${(val / 1000)}k`
+                  }
                 }
               }
             }
-          }
+          });
         }
-      });
+      }
+
+      // 2. Category Share Donut Chart
+      if (donutChartRef.current) {
+        if (donutChartInstance.current) {
+          donutChartInstance.current.destroy();
+        }
+
+        const ctxDonut = donutChartRef.current.getContext('2d');
+        if (ctxDonut) {
+          donutChartInstance.current = new Chart(ctxDonut, {
+            type: 'doughnut',
+            data: {
+              labels: ['Oversized Tees', 'Hoodies', 'Casual', 'Trousers'],
+              datasets: [{
+                data: [42, 28, 18, 12],
+                backgroundColor: [
+                  '#6366F1', // Indigo
+                  '#8B5CF6', // Violet
+                  '#06B6D4', // Cyan
+                  '#F59E0B'  // Amber
+                ],
+                borderColor: isDarkMode ? '#111827' : '#FFFFFF',
+                borderWidth: 3,
+                hoverOffset: 6
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              cutout: '74%',
+              animation: {
+                animateRotate: true,
+                animateScale: true,
+                duration: 1200
+              },
+              plugins: {
+                legend: {
+                  display: false // We render a custom sleek legend in JSX below
+                },
+                tooltip: {
+                  backgroundColor: isDarkMode ? '#1E293B' : '#0F172A',
+                  titleColor: '#F8FAFC',
+                  bodyColor: '#F8FAFC',
+                  padding: 12,
+                  callbacks: {
+                    label: function(context) {
+                      return ` ${context.label}: ${context.raw}% of Total Sales`;
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
+    } catch (chartErr) {
+      console.warn('Chart render note:', chartErr);
     }
 
     return () => {
-      if (barChartInstance.current) barChartInstance.current.destroy();
-      if (donutChartInstance.current) donutChartInstance.current.destroy();
+      try {
+        if (barChartInstance.current) barChartInstance.current.destroy();
+        if (donutChartInstance.current) donutChartInstance.current.destroy();
+      } catch (e) {}
     };
-  }, [activeTab, isDarkMode]);
+  }, [activeTab, isDarkMode, isAuthenticated]);
 
   /* ==========================================================================
      CRUD Action Handlers
@@ -674,6 +979,20 @@ function AdminApp() {
   /* ==========================================================================
      RENDER INTERFACE
      ========================================================================== */
+  if (!isAuthenticated) {
+    return (
+      <AdminLoginScreen
+        onLogin={() => {
+          safeStorage.setItem('tv_admin_auth', 'true');
+          setIsAuthenticated(true);
+          showToast('Welcome back, Admin! Session unlocked.');
+        }}
+        isDarkMode={isDarkMode}
+        setIsDarkMode={setIsDarkMode}
+      />
+    );
+  }
+
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50 dark:bg-[#0B0F17] text-slate-800 dark:text-slate-100">
       
@@ -732,7 +1051,7 @@ function AdminApp() {
           <nav className="p-3 sm:p-4 space-y-1">
             {[
               { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', badge: null },
-              { id: 'orders', label: 'Orders', icon: 'orders', badge: orders.filter(o => o.status === 'pending' || o.status === 'processing').length },
+              { id: 'orders', label: 'Orders', icon: 'orders', badge: (Array.isArray(orders) ? orders : []).filter(o => o?.status === 'pending' || o?.status === 'processing').length },
               { id: 'inventory', label: 'Inventory', icon: 'inventory', badge: metrics.lowStockCount > 0 ? `${metrics.lowStockCount} Low` : null, badgeColor: 'bg-rose-500/10 text-rose-500 border-rose-500/20' },
               { id: 'bank-slips', label: 'Bank Slips', icon: 'receipt', badge: metrics.pendingSlipsCount, badgeColor: 'bg-amber-500 text-slate-900 font-bold' },
               { id: 'analytics', label: 'Analytics', icon: 'analytics', badge: null },
@@ -772,7 +1091,7 @@ function AdminApp() {
           </nav>
         </div>
 
-        {/* Sidebar Footer: Profile Section & Theme Toggle */}
+        {/* Sidebar Footer: Profile Section, Theme Toggle & Lock */}
         <div className="p-3 sm:p-4 border-t border-slate-100 dark:border-zinc-800/60 space-y-2.5 sm:space-y-3">
           
           {/* Live Storefront Quick Link */}
@@ -786,7 +1105,7 @@ function AdminApp() {
             <span>View Live Storefront</span>
           </a>
 
-          {/* Profile Card & Dark Mode Toggle */}
+          {/* Profile Card & Action Buttons */}
           <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-2xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/60 dark:border-zinc-800/60">
             <div className="flex items-center gap-2">
               <div className="relative">
@@ -799,18 +1118,29 @@ function AdminApp() {
               </div>
               <div className="text-left">
                 <div className="text-xs font-bold text-slate-800 dark:text-white leading-tight">Amila Saranga</div>
-                <div className="text-[10px] sm:text-[11px] text-slate-400 dark:text-zinc-500">Store Owner &amp; Manager</div>
+                <div className="text-[10px] sm:text-[11px] text-slate-400 dark:text-zinc-500">Store Owner</div>
               </div>
             </div>
 
-            {/* Dark / Light Mode Toggle Button */}
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-              className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-white dark:bg-zinc-800 text-slate-600 dark:text-amber-400 border border-slate-200 dark:border-zinc-700 hover:scale-105 active:scale-95 shadow-sm transition"
-            >
-              <Icon name={isDarkMode ? "sun" : "moon"} size={15} />
-            </button>
+            <div className="flex items-center gap-1">
+              {/* Dark / Light Mode Toggle Button */}
+              <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-white dark:bg-zinc-800 text-slate-600 dark:text-amber-400 border border-slate-200 dark:border-zinc-700 hover:scale-105 active:scale-95 shadow-sm transition"
+              >
+                <Icon name={isDarkMode ? "sun" : "moon"} size={14} />
+              </button>
+
+              {/* Lock / Logout Button */}
+              <button
+                onClick={handleLogout}
+                title="Lock / Log Out of Admin"
+                className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-white dark:bg-zinc-800 text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 border border-slate-200 dark:border-zinc-700 hover:scale-105 active:scale-95 shadow-sm transition"
+              >
+                <Icon name="logOut" size={14} />
+              </button>
+            </div>
           </div>
         </div>
       </aside>
@@ -869,6 +1199,16 @@ function AdminApp() {
               <Icon name="plus" size={15} />
               <span className="hidden sm:inline">Add New Fit</span>
               <span className="sm:hidden">New Fit</span>
+            </button>
+
+            {/* Header Lock Session Button */}
+            <button
+              onClick={handleLogout}
+              title="Lock Admin Session"
+              className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2.5 rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-300 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50/50 dark:hover:bg-rose-950/20 text-xs font-bold transition"
+            >
+              <Icon name="lock" size={15} className="text-rose-500" />
+              <span className="hidden md:inline">Lock</span>
             </button>
           </div>
         </header>

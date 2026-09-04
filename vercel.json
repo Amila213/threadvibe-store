@@ -34,7 +34,7 @@
       "dest": "server.js"
     },
     {
-      "src": "/admin",
+      "src": "/admin(.*)",
       "dest": "server.js"
     },
     {

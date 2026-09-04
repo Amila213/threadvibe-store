@@ -46,12 +46,21 @@
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-body);
   background: var(--color-bg);
   color: var(--color-text-main);
   line-height: 1.5;
   overflow-x: hidden;
+}
+
+/* Smooth Scrolling Containers */
+html, body, .admin-layout, .admin-main, .table-container, .modal-body, .overflow-y-auto, .overflow-x-auto, [data-scrollable] {
+  scroll-behavior: smooth;
 }
 
 /* Layout */

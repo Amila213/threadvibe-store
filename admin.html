@@ -56,7 +56,19 @@
   <!-- Chart.js for silky smooth animated gradient Bar & Donut charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
+  <!-- Admin Core CSS -->
+  <link rel="stylesheet" href="/css/admin.css">
+
   <style>
+    /* Smooth Scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    html, body, .overflow-y-auto, .overflow-x-auto, [data-scrollable] {
+      scroll-behavior: smooth;
+    }
+
     /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
@@ -89,6 +101,15 @@
       animation: pulse-subtle 2.5s infinite ease-in-out;
     }
 
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .animate-shake {
+      animation: shake 0.4s ease-in-out;
+    }
+
     /* Touch & Mobile Optimizations */
     html, body {
       touch-action: manipulation;
@@ -113,7 +134,20 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none'%3E%3Crect width='32' height='32' rx='8' fill='%23111827'/%3E%3Cpath d='M8 10h16M16 10v12c0 3-4 3-4 0v-4c0-2 4-2 6 1l4 5' stroke='%23E07A5F' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 </head>
 <body class="h-full bg-slate-50 text-slate-800 dark:bg-[#0B0F17] dark:text-slate-100 antialiased font-sans selection:bg-brand-500 selection:text-white">
-  <div id="root" class="h-full"></div>
+  <div id="root" class="h-full">
+    <!-- Clean Initial Loading State -->
+    <div class="h-full w-full min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#0B0F17]">
+      <div class="flex flex-col items-center gap-4 text-center p-6">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-500 to-amber-500 flex items-center justify-center text-white font-black text-xl shadow-glow-coral animate-pulse">
+          TV
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-brand-500 animate-ping"></div>
+          <p class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400">Loading ThreadVibe Admin...</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- React Dashboard Application Script -->
   <script type="text/babel" src="/js/admin-app.js"></script>

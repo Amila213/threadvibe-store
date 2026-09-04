@@ -74,6 +74,24 @@ html {
   width: 100%;
 }
 
+/* Smooth Scrolling Containers across Desktop & Mobile */
+html, 
+body, 
+.cart-drawer-items, 
+.quick-view-modal, 
+.mobile-nav-drawer, 
+.products-grid, 
+.category-chips, 
+.orders-modal, 
+.modal-body,
+.scrollable-container, 
+.overflow-y-auto, 
+.overflow-x-auto,
+.collection-scroll,
+[data-scrollable] {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--color-bg);
