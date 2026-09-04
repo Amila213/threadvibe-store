@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ThreadVibe Admin | Modern Apparel Dashboard</title>
-  
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet">
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -48,10 +51,10 @@
     }
   </script>
 
-  <!-- React 18, ReactDOM & Babel — pinned stable versions from cdnjs (avoids unpkg failures) -->
-  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js" integrity="sha512-QVs8Lo43F9lSuBykadDb0oSXDL/BbZ588urWVCRwSIoewQv/Ewg1f84mK3U790bZ0FfhFa1YSQUmIhG+pIRKg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js" integrity="sha512-6a1107rTlA4gYpgHAqbwLAtxmWNkFnSLXFQjdrNBiPHlIGhrFJ5lWqXPT5co31bJSBzp68oa8NI5mOlMZXZ1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js" integrity="sha512-FhbTFhxhyMFTpFSBSuGtLmZaBOR2oJ8gWvvGu3EvOj4hkVV6K+dWCjxqJ8OxbA/7NG26YPwFj4Fk5GJqDFPhA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- React 18, ReactDOM & Babel — Clean reliable CDN versions -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
 
   <!-- Chart.js for animated gradient Bar & Donut charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
@@ -64,8 +67,12 @@
     html {
       scroll-behavior: smooth;
     }
-    
-    html, body, .overflow-y-auto, .overflow-x-auto, [data-scrollable] {
+
+    html,
+    body,
+    .overflow-y-auto,
+    .overflow-x-auto,
+    [data-scrollable] {
       scroll-behavior: smooth;
     }
 
@@ -74,17 +81,20 @@
       width: 6px;
       height: 6px;
     }
+
     ::-webkit-scrollbar-track {
       background: transparent;
     }
+
     ::-webkit-scrollbar-thumb {
       background: #cbd5e1;
       border-radius: 9999px;
     }
+
     .dark ::-webkit-scrollbar-thumb {
       background: #334155;
     }
-    
+
     /* Smooth Transitions */
     * {
       transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
@@ -94,24 +104,48 @@
 
     /* Animation utilities */
     @keyframes pulse-subtle {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.85; transform: scale(1.03); }
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.85;
+        transform: scale(1.03);
+      }
     }
+
     .animate-pulse-subtle {
       animation: pulse-subtle 2.5s infinite ease-in-out;
     }
 
     @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-6px); }
-      40%, 80% { transform: translateX(6px); }
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      20%,
+      60% {
+        transform: translateX(-6px);
+      }
+
+      40%,
+      80% {
+        transform: translateX(6px);
+      }
     }
+
     .animate-shake {
       animation: shake 0.4s ease-in-out;
     }
 
     /* Touch & Mobile Optimizations */
-    html, body {
+    html,
+    body {
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
       overflow-x: hidden;
@@ -131,25 +165,48 @@
   </style>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none'%3E%3Crect width='32' height='32' rx='8' fill='%23111827'/%3E%3Cpath d='M8 10h16M16 10v12c0 3-4 3-4 0v-4c0-2 4-2 6 1l4 5' stroke='%23E07A5F' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none'%3E%3Crect width='32' height='32' rx='8' fill='%23111827'/%3E%3Cpath d='M8 10h16M16 10v12c0 3-4 3-4 0v-4c0-2 4-2 6 1l4 5' stroke='%23E07A5F' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 </head>
-<body class="h-full bg-slate-50 text-slate-800 dark:bg-[#0B0F17] dark:text-slate-100 antialiased font-sans selection:bg-brand-500 selection:text-white">
+
+<body
+  class="h-full bg-slate-50 text-slate-800 dark:bg-[#0B0F17] dark:text-slate-100 antialiased font-sans selection:bg-brand-500 selection:text-white">
   <div id="root" class="h-full">
     <!-- Clean Initial Loading State -->
     <div class="h-full w-full min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#0B0F17]">
       <div class="flex flex-col items-center gap-4 text-center p-6">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-500 to-amber-500 flex items-center justify-center text-white font-black text-xl shadow-glow-coral animate-pulse">
+        <div
+          class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-500 to-amber-500 flex items-center justify-center text-white font-black text-xl shadow-glow-coral animate-pulse">
           TV
         </div>
         <div class="flex items-center gap-2">
           <div class="w-2 h-2 rounded-full bg-brand-500 animate-ping"></div>
-          <p class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400">Loading ThreadVibe Admin...</p>
+          <p id="admin-boot-msg" class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400">
+            Loading ThreadVibe Admin...</p>
+        </div>
+        <div id="admin-boot-recovery" class="hidden flex flex-col items-center gap-2 mt-2">
+          <p class="text-xs text-slate-400">Initial connection taking longer than expected?</p>
+          <button onclick="window.location.reload()"
+            class="px-4 py-1.5 rounded-full bg-brand-500 text-white text-xs font-bold shadow-soft hover:bg-brand-600 transition">
+            Reload Dashboard
+          </button>
         </div>
       </div>
     </div>
   </div>
 
+  <script>
+    // Fail-safe watchdog: if React hasn't mounted in 3 seconds, show recovery action
+    setTimeout(function () {
+      if (!window.__adminMounted) {
+        var recovery = document.getElementById('admin-boot-recovery');
+        if (recovery) recovery.classList.remove('hidden');
+      }
+    }, 3000);
+  </script>
+
   <!-- React Dashboard Application Script -->
-  <script type="text/babel" src="/js/admin-app.js"></script>
+  <script type="text/babel" src="js/admin-app.js"></script>
 </body>
+
 </html>

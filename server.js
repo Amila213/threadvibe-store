@@ -310,27 +310,48 @@ app.post('/api/orders', async (req, res) => {
     const newOrder = new Order(orderData);
     await newOrder.save();
 
-    // Deduct stock in MongoDB
+    // Atomically deduct stock in MongoDB
+    const updatedProducts = [];
     if (items.length > 0) {
       for (const item of items) {
         const prodIdentifier = item.id || item.productId;
         if (!prodIdentifier) continue;
 
+        const deductQty = Number(item.qty || item.quantity) || 1;
         const isItemObjectId = mongoose.Types.ObjectId.isValid(prodIdentifier) && prodIdentifier.length === 24;
         const pFilter = isItemObjectId ? { $or: [{ id: prodIdentifier }, { _id: prodIdentifier }] } : { id: prodIdentifier };
 
-        const prod = await Product.findOne(pFilter);
-        if (prod) {
-          const deductQty = Number(item.qty || item.quantity) || 1;
-          prod.stockLeft = Math.max(0, (prod.stockLeft || 1) - deductQty);
-          prod.stock = prod.stockLeft;
-          prod.status = prod.stockLeft <= 0 ? 'out-of-stock' : (prod.stockLeft <= 3 ? 'urgent' : 'in-stock');
-          await prod.save();
+        // Atomic decrement using $inc
+        let updatedProd = await Product.findOneAndUpdate(
+          pFilter,
+          { $inc: { stock: -deductQty, stockLeft: -deductQty } },
+          { new: true }
+        );
+
+        if (updatedProd) {
+          const currentStock = Number(updatedProd.stockLeft !== undefined ? updatedProd.stockLeft : updatedProd.stock) || 0;
+          if (currentStock <= 0) {
+            updatedProd.stock = 0;
+            updatedProd.stockLeft = 0;
+            updatedProd.status = 'out-of-stock';
+            await updatedProd.save();
+          } else if (currentStock <= 3) {
+            updatedProd.status = 'urgent';
+            await updatedProd.save();
+          }
+
+          updatedProducts.push({
+            id: updatedProd.id,
+            _id: updatedProd._id,
+            stock: updatedProd.stock,
+            stockLeft: updatedProd.stockLeft,
+            status: updatedProd.status
+          });
         }
       }
     }
 
-    res.status(201).json({ success: true, order: newOrder });
+    res.status(201).json({ success: true, order: newOrder, updatedProducts, updatedStock: updatedProducts });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

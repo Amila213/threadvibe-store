@@ -445,9 +445,9 @@ function renderProducts(categoryFilter = 'all', searchQuery = '') {
           <span class="discount-pill">-${p.discountPercent}%</span>
         </div>
 
-        <div class="stock-status ${p.status === 'urgent' ? 'urgent' : 'in-stock'}">
+        <div class="stock-status ${(p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 0 ? 'out-of-stock' : (p.status === 'urgent' || (p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 3 ? 'urgent' : 'in-stock')}">
           <span class="stock-dot"></span>
-          <span>${p.stockLeft <= 5 ? `Only ${p.stockLeft} items left in stock!` : 'In Stock - Ready to Dispatch'}</span>
+          <span>${(p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 0 ? 'Out of Stock' : ((p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 5 ? `Only ${p.stockLeft !== undefined ? p.stockLeft : p.stock} items left in stock!` : 'In Stock - Ready to Dispatch')}</span>
         </div>
 
         <!-- Size Selector Pills -->
@@ -470,9 +470,9 @@ function renderProducts(categoryFilter = 'all', searchQuery = '') {
 
         <!-- Action Buttons -->
         <div class="card-actions">
-          <button type="button" class="btn-card-buy" onclick="addToCartClick('${p.id}')">
+          <button type="button" class="btn-card-buy" onclick="addToCartClick('${p.id}')" ${(p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 0 ? 'disabled style="opacity: 0.55; cursor: not-allowed;"' : ''}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            Add to Cart
+            ${(p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 0 ? 'Out of Stock' : 'Add to Cart'}
           </button>
           
           <button type="button" class="btn-card-whatsapp" onclick="orderViaWhatsApp('${p.id}')" title="Order via WhatsApp">
@@ -692,6 +692,11 @@ function updateCartUI(cartState) {
 function addToCartClick(productId) {
   const product = PRODUCTS.find(p => p.id === productId);
   if (!product) return;
+  const stock = Number(product.stockLeft !== undefined ? product.stockLeft : product.stock) || 0;
+  if (stock <= 0 || product.status === 'out-of-stock') {
+    showToast('Sorry, this item is out of stock!', 'warning');
+    return;
+  }
   cart.addItem(product, product.selectedSize, 1);
 }
 
@@ -755,6 +760,7 @@ function openQuickView(productId) {
 
   const backdrop = document.getElementById('quickview-backdrop');
   const modalContent = document.getElementById('quickview-content');
+  const qvStock = Number(product.stockLeft !== undefined ? product.stockLeft : product.stock) || 0;
 
   modalContent.innerHTML = `
     <div class="quickview-grid">
@@ -776,9 +782,9 @@ function openQuickView(productId) {
           <span class="discount-pill">-${product.discountPercent}% OFF</span>
         </div>
 
-        <div class="stock-status ${product.status === 'urgent' ? 'urgent' : 'in-stock'}">
+        <div class="stock-status ${qvStock <= 0 ? 'out-of-stock' : (product.status === 'urgent' || qvStock <= 3 ? 'urgent' : 'in-stock')}">
           <span class="stock-dot"></span>
-          <span>${product.stockLeft <= 5 ? `Urgent: Only ${product.stockLeft} left in stock!` : 'In Stock & Ready for Immediate Dispatch'}</span>
+          <span>${qvStock <= 0 ? 'Out of Stock' : (qvStock <= 5 ? `Urgent: Only ${qvStock} left in stock!` : 'In Stock & Ready for Immediate Dispatch')}</span>
         </div>
 
         <p style="font-size: 0.9rem; color: #475569; line-height: 1.6; margin-bottom: 1.5rem;">
@@ -798,21 +804,21 @@ function openQuickView(productId) {
           </div>
         </div>
 
-        <!-- Material Details & Badges -->
-        <div style="background: #f8fafc; padding: 0.85rem; border-radius: var(--radius-md); font-size: 0.8rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.4rem; border: 1px solid var(--color-border);">
-          <div>✨ <strong>Fabric:</strong> 100% Super-combed breathable cotton</div>
-          <div>🚚 <strong>Delivery:</strong> 1-3 working days islandwide (Cash on Delivery)</div>
-          <div>🔄 <strong>Exchanges:</strong> Hassle-free 7-day size exchange</div>
+        <!-- Material Details & Badges (Issue #4: high-contrast dark text on white card) -->
+        <div class="quickview-spec-card">
+          <div>✨ <strong>Fabric:</strong> <span>100% Super-combed breathable cotton</span></div>
+          <div>🚚 <strong>Delivery:</strong> <span>1-3 working days islandwide (Cash on Delivery)</span></div>
+          <div>🔄 <strong>Exchanges:</strong> <span>Hassle-free 7-day size exchange</span></div>
         </div>
 
-        <!-- Action buttons in modal -->
-        <div style="display: flex; gap: 0.75rem; margin-top: auto;">
-          <button type="button" class="btn btn-accent" style="flex: 1; padding: 0.85rem;" onclick="addQvToCart('${product.id}')">
+        <!-- Action buttons in modal (Issue #4: responsive layout preventing WhatsApp button clip) -->
+        <div class="quickview-action-bar">
+          <button type="button" class="btn btn-accent" onclick="addQvToCart('${product.id}')" ${qvStock <= 0 ? 'disabled style="opacity: 0.55; cursor: not-allowed;"' : ''}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            Add to Bag
+            ${qvStock <= 0 ? 'Out of Stock' : 'Add to Bag'}
           </button>
           
-          <button type="button" class="btn btn-whatsapp" style="flex: 1; padding: 0.85rem;" onclick="orderViaWhatsApp('${product.id}')">
+          <button type="button" class="btn btn-whatsapp" onclick="orderViaWhatsApp('${product.id}')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
             Order via WhatsApp
           </button>
@@ -848,6 +854,11 @@ function selectQvSize(productId, size) {
 function addQvToCart(productId) {
   const product = PRODUCTS.find(p => p.id === productId);
   if (!product) return;
+  const stock = Number(product.stockLeft !== undefined ? product.stockLeft : product.stock) || 0;
+  if (stock <= 0 || product.status === 'out-of-stock') {
+    showToast('Sorry, this item is out of stock!', 'warning');
+    return;
+  }
   cart.addItem(product, product.selectedSize, 1);
   document.getElementById('quickview-backdrop').classList.remove('active');
   document.body.style.overflow = '';
@@ -1042,17 +1053,59 @@ Please confirm my order dispatch. Thank you!`;
     slipUrl: document.getElementById('slip-preview-thumb')?.src || ''
   };
 
+  // Save order to server API & handle auto-deducted stock response
   fetch('/api/orders', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(orderPayload)
-  }).catch(err => console.warn('Could not post order to API:', err));
+  })
+  .then(async res => {
+    if (res.ok) {
+      const data = await res.json();
+      const updates = data.updatedProducts || data.updatedStock;
+      if (Array.isArray(updates) && updates.length > 0) {
+        updates.forEach(up => {
+          const p = PRODUCTS.find(prod => prod.id === up.id || prod._id === up._id);
+          if (p) {
+            p.stock = up.stock;
+            p.stockLeft = up.stockLeft;
+            p.status = up.status;
+          }
+        });
+        const currentCategory = document.querySelector('.filter-tab.active')?.getAttribute('data-category') || 'all';
+        renderProducts(currentCategory);
+        return;
+      }
+    }
+    // Fallback if API returned without stock updates
+    deductStockLocally(orderPayload.items);
+  })
+  .catch(err => {
+    console.warn('Could not post order to API, deducting stock locally:', err);
+    deductStockLocally(orderPayload.items);
+  });
 
   // Close checkout modal and show success modal
   document.getElementById('checkout-backdrop').classList.remove('active');
 
   showOrderSuccess(orderId, name, total, waOrderMessage);
   cart.clear();
+}
+
+function deductStockLocally(items) {
+  if (!Array.isArray(items)) return;
+  items.forEach(item => {
+    const p = PRODUCTS.find(prod => prod.id === item.id);
+    if (p) {
+      const deductQty = Number(item.qty || item.quantity) || 1;
+      const current = Number(p.stockLeft !== undefined ? p.stockLeft : p.stock) || 0;
+      p.stockLeft = Math.max(0, current - deductQty);
+      p.stock = p.stockLeft;
+      p.status = p.stockLeft <= 0 ? 'out-of-stock' : (p.stockLeft <= 3 ? 'urgent' : 'in-stock');
+    }
+  });
+  const currentCategory = document.querySelector('.filter-tab.active')?.getAttribute('data-category') || 'all';
+  renderProducts(currentCategory);
 }
 
 function showOrderSuccess(orderId, name, total, waMessage) {
