@@ -256,6 +256,7 @@ const cart = new CartState();
 
 // Initialize Application UI
 document.addEventListener('DOMContentLoaded', () => {
+  initDarkMode(); // must be first to prevent FOUC
   renderProducts('all');
   initFilterTabs();
   initSearch();
@@ -346,6 +347,46 @@ function initScrollHeader() {
       header.classList.remove('scrolled');
     }
   });
+}
+
+/* ==========================================================================
+   Dark Mode Toggle — persists preference in localStorage
+   ========================================================================== */
+function initDarkMode() {
+  const htmlEl = document.getElementById('html-root') || document.documentElement;
+  const btn = document.getElementById('dark-mode-toggle');
+
+  // Restore saved preference (or use system default)
+  const savedTheme = localStorage.getItem('tv_theme');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+
+  if (shouldBeDark) {
+    htmlEl.classList.add('dark');
+  } else {
+    htmlEl.classList.remove('dark');
+  }
+
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    const isDark = htmlEl.classList.toggle('dark');
+    localStorage.setItem('tv_theme', isDark ? 'dark' : 'light');
+    // Provide brief visual feedback
+    btn.style.transform = 'scale(0.88)';
+    setTimeout(() => { btn.style.transform = ''; }, 180);
+  });
+
+  // Sync with OS-level theme changes
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      // Only auto-switch if user hasn't manually set a preference
+      if (!localStorage.getItem('tv_theme')) {
+        if (e.matches) htmlEl.classList.add('dark');
+        else htmlEl.classList.remove('dark');
+      }
+    });
+  }
 }
 
 /* ==========================================================================

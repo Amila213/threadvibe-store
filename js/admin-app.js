@@ -226,6 +226,9 @@ function AdminLoginScreen({ onLogin, isDarkMode, setIsDarkMode }) {
     setError('');
     setIsLoading(true);
 
+    // Accepted PINs for offline/fallback authentication
+    const VALID_PINS = ['admin123', '2130'];
+
     try {
       const res = await fetch('/api/admin/verify', {
         method: 'POST',
@@ -234,19 +237,22 @@ function AdminLoginScreen({ onLogin, isDarkMode, setIsDarkMode }) {
       }).then(r => r.json()).catch(() => null);
 
       if (res && res.success) {
+        safeStorage.setItem('tv_admin_auth', 'true');
         onLogin();
-      } else if (cleanPin === 'admin123') {
+      } else if (VALID_PINS.includes(cleanPin)) {
         // Safe offline/fallback authentication
+        safeStorage.setItem('tv_admin_auth', 'true');
         onLogin();
       } else {
-        setError(res?.error || 'Invalid Admin PIN or Password. (Default: admin123)');
+        setError(res?.error || 'Invalid Admin PIN or Password. (Default: admin123 or 2130)');
         if (inputRef.current) inputRef.current.focus();
       }
     } catch (err) {
-      if (cleanPin === 'admin123') {
+      if (VALID_PINS.includes(cleanPin)) {
+        safeStorage.setItem('tv_admin_auth', 'true');
         onLogin();
       } else {
-        setError('Verification error. Please enter PIN (Default: admin123)');
+        setError('Verification error. Please enter PIN (Default: admin123 or 2130)');
       }
     } finally {
       setIsLoading(false);
@@ -315,7 +321,7 @@ function AdminLoginScreen({ onLogin, isDarkMode, setIsDarkMode }) {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-zinc-300">
                 <span>Admin PIN or Password</span>
-                <span className="text-[10px] text-slate-400 font-normal">Default: admin123</span>
+                <span className="text-[10px] text-slate-400 font-normal">Default: admin123 | PIN: 2130</span>
               </div>
 
               <div className="relative">

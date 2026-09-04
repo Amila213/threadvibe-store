@@ -465,12 +465,16 @@ app.post('/api/upload', (req, res) => {
 // 5. ADMIN AUTH VERIFICATION API
 // ==========================================
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+// Additional fixed PIN for quick access (also configurable via ADMIN_PIN env var)
+const ADMIN_PIN = process.env.ADMIN_PIN || '2130';
 
 app.post('/api/admin/verify', (req, res) => {
   try {
     const { pin, password } = req.body || {};
-    const entered = (pin !== undefined && pin !== null ? pin : password);
-    if (entered && String(entered).trim() === String(ADMIN_PASSWORD).trim()) {
+    const entered = String((pin !== undefined && pin !== null ? pin : password) || '').trim();
+    const validPassword = String(ADMIN_PASSWORD).trim();
+    const validPin = String(ADMIN_PIN).trim();
+    if (entered && (entered === validPassword || entered === validPin)) {
       return res.json({ success: true, message: 'Admin authentication successful' });
     }
     return res.status(401).json({ success: false, error: 'Incorrect Admin PIN or Password' });

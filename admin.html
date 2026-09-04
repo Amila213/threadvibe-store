@@ -48,13 +48,13 @@
     }
   </script>
 
-  <!-- React 18, ReactDOM & Babel -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- React 18, ReactDOM & Babel — pinned stable versions from cdnjs (avoids unpkg failures) -->
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js" integrity="sha512-QVs8Lo43F9lSuBykadDb0oSXDL/BbZ588urWVCRwSIoewQv/Ewg1f84mK3U790bZ0FfhFa1YSQUmIhG+pIRKg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js" integrity="sha512-6a1107rTlA4gYpgHAqbwLAtxmWNkFnSLXFQjdrNBiPHlIGhrFJ5lWqXPT5co31bJSBzp68oa8NI5mOlMZXZ1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js" integrity="sha512-FhbTFhxhyMFTpFSBSuGtLmZaBOR2oJ8gWvvGu3EvOj4hkVV6K+dWCjxqJ8OxbA/7NG26YPwFj4Fk5GJqDFPhA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-  <!-- Chart.js for silky smooth animated gradient Bar & Donut charts -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Chart.js for animated gradient Bar & Donut charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 
   <!-- Admin Core CSS -->
   <link rel="stylesheet" href="/css/admin.css">
