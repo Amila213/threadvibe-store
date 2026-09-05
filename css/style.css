@@ -101,8 +101,8 @@ body {
   max-width: 100vw;
   width: 100%;
   position: relative;
-  /* Offset for fixed header: announcement bar (~36px) + header (~72px) */
-  padding-top: calc(36px + 72px);
+  /* Offset for fixed header only (no announcement bar) */
+  padding-top: 72px;
 }
 
 img {
@@ -139,21 +139,10 @@ ul, ol {
 }
 
 /* ==========================================================================
-   Announcement Bar
+   Announcement Bar — Hidden (removed from design)
    ========================================================================== */
 .announcement-bar {
-  background: linear-gradient(90deg, #111827 0%, #1f2937 50%, #111827 100%);
-  color: #f9fafb;
-  font-size: 0.82rem;
-  font-weight: 500;
-  padding: 0.55rem 1rem;
-  text-align: center;
-  position: relative;
-  z-index: 50;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  width: 100%;
-  max-width: 100vw;
-  overflow: hidden;
+  display: none !important;
 }
 
 .announcement-content {
@@ -2015,6 +2004,46 @@ ul, ol {
   color: #ef4444;
 }
 
+/* Back to Store button — top-left of modal */
+.modal-back-btn {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.9rem;
+  background: rgba(17, 24, 39, 0.07);
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+  z-index: 10;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.modal-back-btn:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #ffffff;
+  transform: translateX(-2px);
+}
+
+html.dark .modal-back-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+}
+
+html.dark .modal-back-btn:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #ffffff;
+}
+
 .quickview-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2654,17 +2683,6 @@ ul, ol {
 
 /* Tablets & Large Mobile Devices (<= 768px) */
 @media (max-width: 768px) {
-  /* Announcement Bar */
-  .announcement-bar {
-    font-size: 0.76rem;
-    padding: 0.5rem 0.75rem;
-  }
-
-  .announcement-content {
-    gap: 0.4rem;
-    text-align: center;
-  }
-
   /* Header & Navigation */
   .header-inner {
     height: 4rem;
@@ -2701,22 +2719,6 @@ ul, ol {
 
   .header-actions {
     gap: 0.45rem;
-  }
-
-  /* Announcement bar */
-  .announcement-bar {
-    font-size: 0.74rem;
-    padding: 0.45rem 0.65rem;
-  }
-
-  .announcement-badge {
-    font-size: 0.65rem;
-    padding: 0.1rem 0.45rem;
-  }
-
-  .announcement-text-wrap {
-    gap: 0.35rem;
-    line-height: 1.35;
   }
 
   .icon-btn {
@@ -3249,16 +3251,6 @@ ul, ol {
     padding: 0 0.85rem;
   }
 
-  .announcement-bar {
-    font-size: 0.7rem;
-    padding: 0.4rem 0.5rem;
-  }
-
-  .announcement-badge {
-    font-size: 0.62rem;
-    padding: 0.08rem 0.4rem;
-  }
-
   .hero-title {
     font-size: 1.85rem;
   }
@@ -3447,11 +3439,7 @@ html.dark body {
   color: #e2e8f0;
 }
 
-/* Announcement Bar */
-html.dark .announcement-bar {
-  background: linear-gradient(90deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-  border-bottom-color: rgba(255,255,255,0.06);
-}
+
 
 /* Header */
 html.dark .header {
@@ -3874,18 +3862,10 @@ html.dark .admin-pill-btn:hover {
 }
 
 /* ==========================================================================
-   Fixed Announcement Bar + Fixed Header — Dark Mode overrides
+   Fixed Header — no announcement bar above it
    ========================================================================== */
-.announcement-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-}
-
 .header {
-  top: 36px; /* Below announcement bar */
+  top: 0; /* Header sits at very top, announcement bar removed */
 }
 
 html.dark .header {
@@ -3984,17 +3964,12 @@ html.dark .quickview-spec-card strong {
    Mobile Responsive: body padding adjustment for smaller screens
    ========================================================================== */
 @media (max-width: 600px) {
-  .announcement-bar {
-    font-size: 0.75rem;
-    padding: 0.45rem 0.75rem;
-  }
-
   body {
-    /* Mobile: tighter announcement bar */
-    padding-top: calc(32px + 66px);
+    /* Mobile: header only, no announcement bar */
+    padding-top: 66px;
   }
 
   .header {
-    top: 32px;
+    top: 0;
   }
 }

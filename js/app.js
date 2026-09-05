@@ -320,10 +320,6 @@ async function loadStoreData() {
       if (settingsRes.shippingFeeColombo) CONFIG.shippingFeeColombo = Number(settingsRes.shippingFeeColombo);
       if (settingsRes.shippingFeeOutstation) CONFIG.shippingFeeOutstation = Number(settingsRes.shippingFeeOutstation);
       if (settingsRes.freeShippingThreshold) CONFIG.freeShippingThreshold = Number(settingsRes.freeShippingThreshold);
-      if (settingsRes.announcementText) {
-        const annMsg = document.querySelector('.announcement-content span');
-        if (annMsg) annMsg.innerHTML = settingsRes.announcementText;
-      }
     }
 
     if (Array.isArray(productsRes) && productsRes.length > 0) {
@@ -732,23 +728,32 @@ Please confirm my order and guide me with the payment/delivery details. Thank yo
 
 /* ==========================================================================
    Quick View Modal
+/* ==========================================================================
+   Quick View Modal & Navigation
    ========================================================================== */
+function closeQuickView() {
+  const backdrop = document.getElementById('quickview-backdrop');
+  if (backdrop) backdrop.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
 function initQuickViewModal() {
   const backdrop = document.getElementById('quickview-backdrop');
   const closeBtn = document.getElementById('quickview-close-btn');
+  const backBtn = document.getElementById('quickview-back-btn');
 
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      backdrop.classList.remove('active');
-      document.body.style.overflow = '';
-    });
+    closeBtn.addEventListener('click', closeQuickView);
+  }
+
+  if (backBtn) {
+    backBtn.addEventListener('click', closeQuickView);
   }
 
   if (backdrop) {
     backdrop.addEventListener('click', (e) => {
       if (e.target === backdrop) {
-        backdrop.classList.remove('active');
-        document.body.style.overflow = '';
+        closeQuickView();
       }
     });
   }
@@ -773,6 +778,13 @@ function openQuickView(productId) {
       </div>
 
       <div class="quickview-info">
+        <button type="button" class="quickview-back-link" onclick="closeQuickView()" aria-label="Back to Store">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Back to Store
+        </button>
         <div class="product-category-name">${product.categoryName}</div>
         <h2 style="font-family: var(--font-heading); font-size: 1.55rem; font-weight: 800; margin-bottom: 0.6rem; color: var(--color-primary);">${product.name}</h2>
         
@@ -823,6 +835,14 @@ function openQuickView(productId) {
             Order via WhatsApp
           </button>
         </div>
+
+        <button type="button" class="quickview-return-btn" onclick="closeQuickView()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Continue Browsing Catalog
+        </button>
       </div>
     </div>
   `;
@@ -870,6 +890,7 @@ function addQvToCart(productId) {
 function initCheckoutModal() {
   const backdrop = document.getElementById('checkout-backdrop');
   const closeBtn = document.getElementById('checkout-close-btn');
+  const backBtn = document.getElementById('checkout-back-btn');
   const openCheckoutBtn = document.getElementById('btn-proceed-checkout');
 
   if (openCheckoutBtn) {
@@ -887,11 +908,17 @@ function initCheckoutModal() {
     });
   }
 
+  const closeCheckout = () => {
+    backdrop.classList.remove('active');
+    document.body.style.overflow = '';
+  };
+
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      backdrop.classList.remove('active');
-      document.body.style.overflow = '';
-    });
+    closeBtn.addEventListener('click', closeCheckout);
+  }
+
+  if (backBtn) {
+    backBtn.addEventListener('click', closeCheckout);
   }
 
   // Payment radio selection change listener
