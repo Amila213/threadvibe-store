@@ -48,8 +48,8 @@ let PRODUCTS = [
     sizes: ['M', 'L', 'XL', 'XXL'],
     selectedSize: 'L',
     description: 'Premium 380 GSM loopback French terry with double-layered hood, concealed kangaroo pocket, and matte metal aglets. Super soft interior.',
-    imageFront: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80',
-    imageBack: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=700&q=80'
+    imageFront: '/uploads/hoodie.jpg',
+    imageBack: '/uploads/hoodie.jpg'
   },
   {
     id: 'tv-03',
@@ -66,8 +66,8 @@ let PRODUCTS = [
     sizes: ['30', '32', '34', '36'],
     selectedSize: '32',
     description: 'Cotton ripstop construction with 6 functional deep ergonomic pockets, adjustable ankle bungee toggles, and elastic waistband with drawstrings.',
-    imageFront: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=700&q=80',
-    imageBack: 'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?auto=format&fit=crop&w=700&q=80'
+    imageFront: '/uploads/cargo_pants.jpg',
+    imageBack: '/uploads/cargo_pants.jpg'
   },
   {
     id: 'tv-04',
@@ -84,8 +84,8 @@ let PRODUCTS = [
     sizes: ['S', 'M', 'L', 'XL'],
     selectedSize: 'M',
     description: 'Breathable pure flax linen blended with organic cotton. Spread collar, coconut shell buttons, lightweight drape engineered for tropical Sri Lankan heat.',
-    imageFront: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=700&q=80',
-    imageBack: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=700&q=80'
+    imageFront: '/uploads/linen_shirt.jpg',
+    imageBack: '/uploads/linen_shirt.jpg'
   },
   {
     id: 'tv-05',
@@ -266,9 +266,46 @@ document.addEventListener('DOMContentLoaded', () => {
   initCheckoutModal();
   initWhatsAppOrderButtons();
   initScrollHeader();
+  initHeroSlider(); // auto-rotating banner
   cart.notify(); // initial render
   loadStoreData(); // sync with server API
 });
+
+/* ==========================================================================
+   Hero Banner Auto-Rotating Slider (4 s crossfade)
+   ========================================================================== */
+const HERO_SLIDER_IMAGES = [
+  '/uploads/1.jpg',
+  'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1000',
+  'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1000'
+];
+
+function initHeroSlider() {
+  const heroSlider = document.querySelector('.hero-slider');
+  if (!heroSlider) return;
+  let slides = document.querySelectorAll('.hero-slide');
+
+  // If container exists, ensure slides match the HERO_SLIDER_IMAGES array
+  if (heroSlider && (slides.length === 0 || slides.length !== HERO_SLIDER_IMAGES.length)) {
+    heroSlider.innerHTML = HERO_SLIDER_IMAGES.map((src, idx) => `
+      <img class="hero-slide ${idx === 0 ? 'active' : ''}"
+           src="${src}"
+           alt="ThreadVibe Hero Lookbook ${idx + 1}"
+           ${idx === 0 ? 'fetchpriority="high" style="object-position: 85% center;"' : 'loading="lazy"'} />
+    `).join('');
+    slides = heroSlider.querySelectorAll('.hero-slide');
+  }
+
+  if (!slides || slides.length < 2) return;
+
+  let current = 0;
+
+  setInterval(() => {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, 4000);
+}
 
 /* ==========================================================================
    Mobile Navigation Drawer
