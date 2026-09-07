@@ -860,18 +860,18 @@ html.dark .mobile-nav-accord-body {
    ========================================================================== */
 .hero-section {
   position: relative;
-  min-height: 86vh;
-  min-height: clamp(600px, 86vh, 840px);
+  overflow: hidden;
+  min-height: clamp(480px, 82vh, 840px);
   display: flex;
   align-items: center;
-  overflow: hidden;
   background-color: #0B0C10;
   background-image: url('/uploads/1.jpg');
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center right;
+  background-position: right center;
   color: #ffffff;
-  padding: 5rem 0;
+  padding: clamp(2rem, 5vw, 5rem) 0;
+  box-sizing: border-box;
 }
 
 .hero-bg-overlay {
@@ -879,9 +879,9 @@ html.dark .mobile-nav-accord-body {
   inset: 0;
   background: linear-gradient(
     to right,
-    rgba(11, 12, 16, 0.92) 0%,
-    rgba(11, 12, 16, 0.70) 45%,
-    rgba(11, 12, 16, 0.20) 100%
+    rgba(11, 12, 16, 0.95) 0%,
+    rgba(11, 12, 16, 0.8) 35%,
+    rgba(11, 12, 16, 0) 65%
   );
   pointer-events: none;
   z-index: 1;
@@ -892,7 +892,7 @@ html.dark .mobile-nav-accord-body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 120px;
+  height: clamp(60px, 12vh, 120px);
   background: linear-gradient(to top, var(--color-bg) 20%, rgba(11, 12, 16, 0.5) 65%, transparent 100%);
   pointer-events: none;
   z-index: 1;
@@ -902,48 +902,65 @@ html.dark .mobile-nav-accord-body {
   position: relative;
   z-index: 2;
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
 }
 
 .hero-content {
-  max-width: 660px;
+  width: 46%;
+  max-width: 46%;
+  margin-left: 0;
+  margin-right: auto;
   text-align: left;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .hero-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: clamp(0.3rem, 0.8vw, 0.6rem);
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(212, 175, 55, 0.35);
-  padding: 0.4rem 1.1rem;
+  padding: 0.2rem 0.6rem;
   border-radius: var(--radius-full);
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: clamp(0.55rem, 1.8vw, 0.75rem);
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: clamp(0.08em, 0.5vw, 0.22em);
   color: #D4AF37;
-  margin-bottom: 1.6rem;
+  margin-bottom: clamp(0.6rem, 1.8vw, 1.4rem);
   text-transform: uppercase;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .hero-tag-dot {
-  width: 6px;
-  height: 6px;
+  width: clamp(4px, 0.8vw, 6px);
+  height: clamp(4px, 0.8vw, 6px);
   background: #D4AF37;
   border-radius: 50%;
   box-shadow: 0 0 10px #D4AF37;
+  flex-shrink: 0;
 }
 
 .hero-title {
   font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  font-size: clamp(2.2rem, 4.5vw, 4.2rem);
-  line-height: 1.12;
+  font-size: clamp(1rem, 3.2vw, 2.75rem);
+  line-height: 1.15;
   font-weight: 700;
   letter-spacing: -0.015em;
-  margin-bottom: 1.35rem;
+  margin-bottom: clamp(0.5rem, 1.5vw, 1.2rem);
   color: #ffffff;
+  word-break: normal;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .hero-title .highlight {
@@ -957,20 +974,37 @@ html.dark .mobile-nav-accord-body {
 
 .hero-subtitle {
   font-family: 'Plus Jakarta Sans', var(--font-sans);
-  font-size: clamp(0.95rem, 1.4vw, 1.08rem);
+  font-size: clamp(0.6rem, 1.4vw, 0.95rem);
+  line-height: 1.3;
   color: #94A3B8;
-  margin-bottom: 2.5rem;
-  line-height: 1.7;
+  margin-bottom: clamp(0.8rem, 2vw, 2rem);
   font-weight: 400;
-  max-width: 580px;
+  max-width: 100%;
 }
 
 .hero-cta-group {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 1.2rem;
+  gap: clamp(0.35rem, 1vw, 1rem);
   flex-wrap: wrap;
-  margin-bottom: 3.2rem;
+  margin-bottom: clamp(0.8rem, 2.2vw, 2.5rem);
+  width: 100%;
+  max-width: 100%;
+}
+
+.hero-cta-group .btn {
+  font-size: clamp(0.6rem, 1.3vw, 0.85rem);
+  padding: clamp(0.35rem, 1vw, 0.75rem) clamp(0.6rem, 1.8vw, 1.5rem);
+  white-space: nowrap;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.hero-cta-group .btn svg {
+  width: clamp(12px, 1.5vw, 16px);
+  height: clamp(12px, 1.5vw, 16px);
+  flex-shrink: 0;
 }
 
 .btn {
@@ -1046,20 +1080,26 @@ html.dark .mobile-nav-accord-body {
 
 .hero-stats {
   display: flex;
-  align-items: center;
-  gap: 2rem;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: clamp(0.5rem, 1.5vw, 1.5rem);
+  flex-wrap: wrap;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
-  padding-top: 2rem;
+  padding-top: clamp(0.6rem, 1.5vw, 1.5rem);
+  font-size: clamp(0.6rem, 1.3vw, 0.9rem);
+  width: 100%;
+  max-width: 100%;
 }
 
 .stat-item {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .stat-number {
   font-family: var(--font-heading);
-  font-size: 2rem;
+  font-size: clamp(0.85rem, 2.2vw, 1.75rem);
   font-weight: 700;
   color: #ffffff;
   line-height: 1.1;
@@ -1068,12 +1108,13 @@ html.dark .mobile-nav-accord-body {
 
 .stat-label {
   font-family: var(--font-sans);
-  font-size: 0.7rem;
+  font-size: clamp(0.48rem, 1.1vw, 0.68rem);
   color: #94a3b8;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  margin-top: 0.3rem;
+  margin-top: 0.2rem;
+  line-height: 1.25;
 }
 
 .stat-divider {
@@ -3165,23 +3206,25 @@ html.dark .mobile-nav-accord-body {
 /* Tablet Landscape & Medium Desktops (<= 1024px) */
 @media (max-width: 1024px) {
   .hero-section {
-    background-position: 80% center;
-    padding: 4.5rem 0;
+    background-position: right center;
+    background-size: cover;
+    overflow: hidden;
+    position: relative;
+    padding: clamp(2.5rem, 5vw, 4.5rem) 0;
   }
 
   .hero-bg-overlay {
     background: linear-gradient(
-      90deg,
-      rgba(11, 15, 23, 0.95) 0%,
-      rgba(11, 15, 23, 0.90) 38%,
-      rgba(17, 24, 39, 0.72) 65%,
-      rgba(17, 24, 39, 0.35) 85%,
-      transparent 100%
+      to right,
+      rgba(11, 12, 16, 0.95) 0%,
+      rgba(11, 12, 16, 0.8) 35%,
+      rgba(11, 12, 16, 0) 65%
     );
   }
 
   .hero-content {
-    max-width: 580px;
+    width: 46%;
+    max-width: 46%;
   }
 
   .category-grid {
@@ -3331,16 +3374,16 @@ html.dark .mobile-nav-accord-body {
 
   /* ─── Mobile Hero: Luxury Obsidian Dark Theme matching PC ─── */
   .hero-section {
-    min-height: clamp(540px, 86vh, 720px);
+    min-height: clamp(480px, 82vh, 760px);
     height: auto;
     background-color: #0B0C10;
     background-image: url('/uploads/1.jpg');
-    background-size: cover;
+    background-size: cover !important;
     background-repeat: no-repeat;
-    background-position: 72% center;
+    background-position: right center !important;
     display: flex;
     align-items: center;
-    padding: clamp(2.5rem, 6vw, 4.5rem) 0;
+    padding: clamp(2rem, 5vw, 4rem) 0;
     width: 100%;
     max-width: 100vw;
     box-sizing: border-box;
@@ -3355,10 +3398,10 @@ html.dark .mobile-nav-accord-body {
     inset: 0;
     background: linear-gradient(
       to right,
-      rgba(11, 12, 16, 0.94) 0%,
-      rgba(11, 12, 16, 0.82) 50%,
-      rgba(11, 12, 16, 0.35) 100%
-    );
+      rgba(11, 12, 16, 0.95) 0%,
+      rgba(11, 12, 16, 0.8) 35%,
+      rgba(11, 12, 16, 0) 65%
+    ) !important;
     pointer-events: none;
     z-index: 1;
   }
@@ -3369,7 +3412,7 @@ html.dark .mobile-nav-accord-body {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 90px;
+    height: clamp(60px, 10vh, 90px);
     background: linear-gradient(to top, #0B0C10 15%, rgba(11, 12, 16, 0.5) 60%, transparent 100%);
     pointer-events: none;
     z-index: 1;
@@ -3379,11 +3422,13 @@ html.dark .mobile-nav-accord-body {
   .hero-banner-inner {
     position: relative;
     z-index: 2;
-    display: flex;
-    flex-direction: column;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
     width: 100%;
     max-width: 100%;
-    padding: 0 clamp(1rem, 3.5vw, 1.5rem) !important;
+    padding: 0 clamp(0.75rem, 3vw, 1.5rem) !important;
     margin: 0 auto;
     box-sizing: border-box;
   }
@@ -3397,39 +3442,42 @@ html.dark .mobile-nav-accord-body {
   }
 
   .hero-content {
-    max-width: 100%;
-    width: 100%;
-    margin: 0;
-    text-align: left;
+    max-width: 46% !important;
+    width: 46% !important;
+    margin: 0 !important;
+    text-align: left !important;
     background: transparent !important;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    box-sizing: border-box !important;
   }
 
   .hero-tag {
     display: inline-flex !important;
     align-items: center;
-    gap: 0.5rem;
+    gap: clamp(0.25rem, 0.6vw, 0.45rem);
     font-family: var(--font-sans);
-    font-size: clamp(0.6rem, 2vw, 0.72rem);
+    font-size: clamp(0.55rem, 1.8vw, 0.75rem) !important;
+    padding: 0.2rem 0.6rem !important;
     font-weight: 700;
-    letter-spacing: clamp(0.12em, 2vw, 0.22em);
+    letter-spacing: clamp(0.06em, 0.4vw, 0.16em);
     text-transform: uppercase;
     color: #D4AF37;
     background: rgba(11, 12, 16, 0.65);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(212, 175, 55, 0.35);
-    padding: 0.38rem 0.85rem;
     border-radius: var(--radius-full);
-    margin-bottom: clamp(0.85rem, 2.5vw, 1.25rem);
+    margin-bottom: clamp(0.5rem, 1.6vw, 1rem);
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .hero-tag-dot {
-    width: 5px;
-    height: 5px;
+    width: clamp(3px, 0.6vw, 5px);
+    height: clamp(3px, 0.6vw, 5px);
     background: #D4AF37;
     border-radius: 50%;
     box-shadow: 0 0 8px #D4AF37;
@@ -3439,58 +3487,70 @@ html.dark .mobile-nav-accord-body {
   .hero-title {
     display: block !important;
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    font-size: clamp(1rem, 3.2vw, 2.75rem) !important;
     font-weight: 700;
-    line-height: 1.15;
+    line-height: 1.15 !important;
     letter-spacing: -0.015em;
     color: #FFFFFF;
-    margin-bottom: clamp(0.75rem, 2.2vw, 1.15rem);
+    margin-bottom: clamp(0.45rem, 1.5vw, 1rem);
     text-align: left;
     word-break: normal;
+    overflow-wrap: break-word;
+    max-width: 100%;
   }
 
   .hero-subtitle {
     display: block !important;
     font-family: 'Plus Jakarta Sans', var(--font-sans);
-    font-size: clamp(0.82rem, 2.8vw, 0.95rem);
+    font-size: clamp(0.6rem, 1.4vw, 0.95rem) !important;
     color: #94A3B8;
-    line-height: 1.6;
+    line-height: 1.3 !important;
     max-width: 100%;
-    margin-bottom: clamp(1.2rem, 3.5vw, 1.75rem);
+    margin-bottom: clamp(0.65rem, 2vw, 1.4rem);
     text-align: left;
   }
 
   .hero-cta-group {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center;
     justify-content: flex-start;
-    width: 100%;
-    max-width: 100%;
-    margin: 0 0 clamp(1.25rem, 3.5vw, 1.75rem) 0;
-    gap: 0.65rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 clamp(0.75rem, 2vw, 1.5rem) 0 !important;
+    gap: clamp(0.3rem, 0.8vw, 0.6rem) !important;
   }
 
   .hero-cta-group .btn {
-    width: 100%;
-    display: inline-flex;
+    width: auto !important;
+    max-width: 100% !important;
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 0.82rem 1.5rem;
-    font-size: 0.76rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
+    font-size: clamp(0.6rem, 1.3vw, 0.85rem) !important;
+    padding: clamp(0.35rem, 1vw, 0.75rem) clamp(0.6rem, 1.8vw, 1.5rem) !important;
+    font-weight: 600;
+    letter-spacing: clamp(0.06em, 0.4vw, 0.14em);
     text-transform: uppercase;
     border-radius: var(--radius-full);
     box-sizing: border-box;
+    white-space: nowrap;
+    gap: clamp(0.2rem, 0.5vw, 0.4rem);
+  }
+
+  .hero-cta-group .btn svg {
+    width: clamp(10px, 1.3vw, 14px);
+    height: clamp(10px, 1.3vw, 14px);
+    flex-shrink: 0;
   }
 
   .hero-cta-group .btn-accent {
     background: #FFFFFF;
     color: #0B0C10;
     border: 1px solid rgba(255, 255, 255, 0.95);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
   }
 
   .hero-cta-group .btn-accent:hover {
@@ -3508,35 +3568,42 @@ html.dark .mobile-nav-accord-body {
   }
 
   .hero-stats {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 0.5rem;
-    padding-top: 0.85rem;
-    text-align: center;
-    width: 100%;
-    margin: 0;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start;
+    justify-content: flex-start;
+    font-size: clamp(0.6rem, 1.3vw, 0.9rem) !important;
+    gap: clamp(0.5rem, 1.5vw, 1.5rem) !important;
+    padding-top: clamp(0.5rem, 1.5vw, 1rem) !important;
+    text-align: left !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .hero-stats .stat-item {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 0.2rem 0;
+    align-items: flex-start;
+    padding: 0;
+    min-width: 0;
   }
 
   .hero-stats .stat-number {
-    font-size: clamp(0.88rem, 3vw, 1.05rem);
+    font-size: clamp(0.8rem, 2.2vw, 1.15rem) !important;
     font-weight: 700;
     color: #FFFFFF;
     line-height: 1.15;
   }
 
   .hero-stats .stat-label {
-    font-size: clamp(0.52rem, 1.8vw, 0.62rem);
+    font-size: clamp(0.46rem, 1vw, 0.58rem) !important;
     color: #94A3B8;
     line-height: 1.25;
-    margin-top: 0.15rem;
+    margin-top: 0.12rem;
+    letter-spacing: 0.04em;
   }
 
   /* Trust Strip */
@@ -3993,11 +4060,13 @@ html.dark .mobile-nav-accord-body {
   }
 
   .hero-section {
-    padding: clamp(2rem, 5vw, 3.5rem) 0;
+    padding: clamp(1.5rem, 4vw, 3rem) 0;
+    background-position: right center !important;
   }
 
-  .hero-title {
-    font-size: clamp(1.5rem, 6vw, 2.2rem);
+  .hero-content {
+    width: 46% !important;
+    max-width: 46% !important;
   }
 
   .category-card {
