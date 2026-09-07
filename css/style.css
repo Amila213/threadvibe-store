@@ -3397,7 +3397,7 @@ html.dark .mobile-nav-accord-body {
     background-position: center center !important;
     overflow: hidden;
     display: flex;
-    align-items: flex-start !important; /* Pull content upwards towards top-left */
+    align-items: center !important;
     justify-content: flex-start !important;
     padding: 0 !important;
     box-sizing: border-box;
@@ -3420,19 +3420,21 @@ html.dark .mobile-nav-accord-body {
     display: none !important;
   }
 
-  /* Strict Left Bounding for Overlay Content — Shifted Upwards towards Top-Left */
+  /* Strict Left Bounding for Content — Balanced Vertical Centering & Top/Bottom Clearance */
   .hero-content, .hero-inner, .hero-section > .container, .hero-section .hero-banner-inner {
-    width: 58% !important;
-    max-width: 58% !important;
+    width: 52% !important;
+    max-width: 52% !important;
     margin-left: clamp(10px, 3vw, 24px) !important;
     margin-right: auto !important;
-    padding: clamp(10px, 3vw, 22px) 0 15px 0 !important;
-    padding-bottom: 15px !important;
+    padding-top: clamp(14px, 3vh, 24px) !important;
+    padding-bottom: clamp(14px, 3vh, 24px) !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     z-index: 10;
     height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: flex-start !important;
+    justify-content: center !important;
     align-items: flex-start !important;
     box-sizing: border-box !important;
   }
@@ -3447,18 +3449,18 @@ html.dark .mobile-nav-accord-body {
     padding: 0 !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: flex-start !important;
+    justify-content: center !important;
     align-items: flex-start !important;
     box-sizing: border-box !important;
   }
 
-  /* Fluid micro-scaling typography — shifted upwards with clean margins */
+  /* Fluid micro-scaling typography — vertical centering with clean margins */
   .hero-section h1,
   .hero-section .hero-title {
-    font-size: clamp(0.95rem, 3.4vw, 1.45rem) !important;
-    line-height: 1.15 !important;
+    font-size: clamp(0.95rem, 3.4vw, 1.4rem) !important;
+    line-height: 1.2 !important;
     margin-top: 0 !important;
-    margin-bottom: 6px !important;
+    margin-bottom: clamp(4px, 1vh, 8px) !important;
     font-weight: 700 !important;
     color: #FFFFFF !important;
     letter-spacing: -0.015em !important;
@@ -3471,10 +3473,10 @@ html.dark .mobile-nav-accord-body {
     -webkit-line-clamp: 2 !important;
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
-    font-size: clamp(0.55rem, 1.6vw, 0.72rem) !important;
-    line-height: 1.25 !important;
+    font-size: clamp(0.55rem, 1.6vw, 0.75rem) !important;
+    line-height: 1.3 !important;
     margin-top: 0 !important;
-    margin-bottom: clamp(6px, 1.8vw, 10px) !important;
+    margin-bottom: clamp(8px, 1.5vh, 12px) !important;
     color: #cbd5e1 !important; /* Soft muted silver tone */
     text-align: left !important;
     max-width: 100% !important;
@@ -3495,13 +3497,12 @@ html.dark .mobile-nav-accord-body {
     display: flex !important;
     flex-direction: column !important;
     flex-wrap: nowrap !important;
-    gap: 8px !important; /* flex-col gap-2 (8px / 0.5rem) */
+    gap: 6px !important;
     align-items: flex-start !important;
     justify-content: flex-start !important;
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    margin-bottom: 15px !important; /* Guarantees at least 15px clearance from bottom edge */
     padding: 0 !important;
   }
 
