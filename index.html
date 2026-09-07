@@ -6,10 +6,10 @@
   <title>ThreadVibe | Modern Fits for Everyday Living</title>
   <meta name="description" content="ThreadVibe - Sri Lanka's premier destination for trending oversized tees, streetwear, and everyday modern apparel. Islandwide Cash on Delivery & instant WhatsApp ordering.">
   
-  <!-- Google Fonts: Outfit (Headings) & Plus Jakarta Sans (Body) -->
+  <!-- Google Fonts: Playfair Display (Luxury Serif) & Plus Jakarta Sans (Modern Sans-Serif) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Preload Hero Background Banner Image for Optimal LCP -->
   <link rel="preload" as="image" href="/uploads/1.jpg" fetchpriority="high">
@@ -18,15 +18,14 @@
   <link rel="stylesheet" href="/css/style.css">
   
   <!-- Favicon SVG: Minimalist Geometric Thread Loop (T & V) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none'%3E%3Crect width='32' height='32' rx='8' fill='%23111827'/%3E%3Cpath d='M8 10h16M16 10v12c0 3-4 3-4 0v-4c0-2 4-2 6 1l4 5' stroke='%23E07A5F' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none'%3E%3Crect width='32' height='32' rx='8' fill='%230B0C10'/%3E%3Cpath d='M8 10h16M16 10v12c0 3-4 3-4 0v-4c0-2 4-2 6 1l4 5' stroke='%23D4AF37' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 
-  <!-- FOUC prevention: apply dark mode class synchronously before CSS loads -->
+  <!-- FOUC prevention: default to luxury Obsidian Noir unless light was explicitly saved -->
   <script>
     (function() {
       try {
         var saved = localStorage.getItem('tv_theme');
-        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (saved === 'dark' || (!saved && prefersDark)) {
+        if (saved !== 'light') {
           document.documentElement.classList.add('dark');
         }
       } catch(e) {}
@@ -35,70 +34,154 @@
 </head>
 <body>
 
-
   <!-- ==========================================================================
-       Header & Navigation
+       Header & Navigation — Frosted Atelier Glass
        ========================================================================== -->
   <header class="header" id="main-header">
     <div class="container header-inner">
-      <!-- Minimalist 'T' & 'V' Geometric Thread Loop Brand Logo -->
-      <a href="#" class="brand-logo" aria-label="ThreadVibe Home">
+      <!-- Minimalist Luxury Monogram & Brand Logo -->
+      <a href="#" class="brand-logo" aria-label="ThreadVibe Atelier">
         <div class="brand-icon">
           <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 7H22" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round"/>
-            <path d="M14 7V17C14 20.5 10 20.5 10 17V13C10 10.5 14 10.5 16 13.5L20.5 20.5" stroke="#E07A5F" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 8H22" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M14 8V18C14 21 10.5 21 10.5 18V14C10.5 11.5 14 11.5 16 14.5L20.5 21" stroke="var(--color-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
-        <span>Thread<span>Vibe</span></span>
+        <div class="brand-text-wrap">
+          <span class="brand-name">THREADVIBE</span>
+          <span class="brand-tagline">ATELIER &bull; ARCHIVE</span>
+        </div>
       </a>
 
-      <!-- Desktop Nav Menu -->
-      <nav class="nav-menu">
-        <a href="#" class="nav-link active">Home</a>
-        <a href="#categories" class="nav-link">Men</a>
-        <a href="#categories" class="nav-link">Women</a>
-        <a href="#featured-products" class="nav-link">New Arrivals</a>
+      <!-- Desktop Nav Menu: Streamlined with Clean Dropdowns -->
+      <nav class="nav-menu" id="desktop-nav-menu">
+        <!-- 1. Men Dropdown -->
+        <div class="nav-item-dropdown">
+          <button class="nav-link dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">
+            <span>Men</span>
+            <svg class="dropdown-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </button>
+          <div class="dropdown-menu">
+            <a href="#featured-products" class="dropdown-item" onclick="filterCategory('tees')">
+              <span class="dropdown-item-title">Oversized Tees</span>
+              <span class="dropdown-item-desc">Heavyweight drop-shoulder fits</span>
+            </a>
+            <a href="#featured-products" class="dropdown-item" onclick="filterCategory('hoodies')">
+              <span class="dropdown-item-title">Hoodies</span>
+              <span class="dropdown-item-desc">French terry &amp; brushed fleece</span>
+            </a>
+            <a href="#featured-products" class="dropdown-item" onclick="filterCategory('cargos')">
+              <span class="dropdown-item-title">Cargo Pants</span>
+              <span class="dropdown-item-desc">Relaxed utility ripstop</span>
+            </a>
+            <a href="#featured-products" class="dropdown-item" onclick="filterCategory('formal')">
+              <span class="dropdown-item-title">Formal Shirts</span>
+              <span class="dropdown-item-desc">Pure flax linen &amp; Cuban collars</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 2. Women Dropdown -->
+        <div class="nav-item-dropdown">
+          <button class="nav-link dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">
+            <span>Women</span>
+            <svg class="dropdown-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </button>
+          <div class="dropdown-menu">
+            <a href="#featured-products" class="dropdown-item" onclick="filterCategory('cropped')">
+              <span class="dropdown-item-title">Cropped Fits</span>
+              <span class="dropdown-item-desc">Tailored box-cut tees &amp; tops</span>
+            </a>
+            <a href="#featured-products" class="dropdown-item" onclick="filterCategory('tees')">
+              <span class="dropdown-item-title">Oversized Tees</span>
+              <span class="dropdown-item-desc">Everyday boyfriend silhouettes</span>
+            </a>
+            <a href="#featured-products" class="dropdown-item" onclick="filterCategory('loungewear')">
+              <span class="dropdown-item-title">Loungewear</span>
+              <span class="dropdown-item-desc">Cozy crewnecks &amp; fleece pants</span>
+            </a>
+            <a href="#featured-products" class="dropdown-item" onclick="filterCategory('dresses')">
+              <span class="dropdown-item-title">Dresses</span>
+              <span class="dropdown-item-desc">Effortless linen &amp; knit pieces</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 3. Kids & Teens Dropdown -->
+        <div class="nav-item-dropdown">
+          <button class="nav-link dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">
+            <span>Kids &amp; Teens</span>
+            <svg class="dropdown-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </button>
+          <div class="dropdown-menu">
+            <a href="#featured-products" class="dropdown-item" onclick="filterCategory('casual-tees')">
+              <span class="dropdown-item-title">Casual Tees</span>
+              <span class="dropdown-item-desc">Combed soft cotton basics</span>
+            </a>
+            <a href="#featured-products" class="dropdown-item" onclick="filterCategory('shorts')">
+              <span class="dropdown-item-title">Shorts</span>
+              <span class="dropdown-item-desc">Active sweatshorts &amp; chinos</span>
+            </a>
+            <a href="#featured-products" class="dropdown-item" onclick="filterCategory('matching-sets')">
+              <span class="dropdown-item-title">Matching Sets</span>
+              <span class="dropdown-item-desc">Coordinated streetwear edits</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 4. Sale with Hot Badge -->
         <a href="#featured-products" class="nav-link sale-link" onclick="filterCategory('sale')">
-          Sale
-          <span class="badge-sale-small">Hot</span>
+          <span>Sale</span>
+          <span class="badge-sale-hot">HOT</span>
         </a>
       </nav>
 
-      <!-- Header Actions: Search, Dark Mode, WhatsApp & Cart -->
+      <!-- Header Actions: Search, Dark Mode, VIP WhatsApp, Admin Panel, Bag Trigger -->
       <div class="header-actions">
         <div class="search-box">
-          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
           </svg>
-          <input type="text" id="search-input" class="search-input" placeholder="Search fits, tees..." autocomplete="off">
+          <input type="text" id="search-input" class="search-input" placeholder="Search archive..." autocomplete="off">
         </div>
 
-        <!-- Dark Mode Toggle -->
-        <button class="icon-btn dark-mode-toggle" id="dark-mode-toggle" aria-label="Toggle Dark Mode" title="Toggle Dark Mode">
-          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Dark/Light Theme Toggle -->
+        <button class="icon-btn dark-mode-toggle" id="dark-mode-toggle" aria-label="Toggle Theme Mode" title="Toggle Theme">
+          <svg class="sun-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
           </svg>
-          <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+          <svg class="moon-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
             <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
           </svg>
         </button>
 
-        <!-- WhatsApp Quick Connect -->
-        <a href="https://wa.me/94771234567?text=Hello%20ThreadVibe%21%20I%20have%20an%20inquiry%20about%20your%20products." target="_blank" class="icon-btn header-wa-btn" title="Chat on WhatsApp" style="color: #25d366;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <!-- WhatsApp VIP Concierge -->
+        <a href="https://wa.me/94771234567?text=Hello%20ThreadVibe%20Atelier%2C%20I%20have%20an%20inquiry%20regarding%20the%20latest%20collection." target="_blank" class="icon-btn header-wa-btn" title="Private Concierge on WhatsApp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
           </svg>
         </a>
 
-        <!-- Admin Panel Pill Button (Portfolio Showcase) -->
-        <a href="/admin.html" class="admin-pill-btn" title="Admin Dashboard">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="3" height="9" x="3" y="3" rx="1"/><rect width="3" height="5" x="14" y="3" rx="1"/><rect width="3" height="9" x="14" y="12" rx="1"/><rect width="3" height="5" x="3" y="16" rx="1"/></svg>
-          Admin Panel
+        <!-- 5. Admin Panel Clear Pill Button -->
+        <a href="/admin.html" class="admin-pill-btn" title="Admin Portal" aria-label="Admin Panel">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="7" height="9" x="3" y="3" rx="1"/>
+            <rect width="7" height="5" x="14" y="3" rx="1"/>
+            <rect width="7" height="9" x="14" y="12" rx="1"/>
+            <rect width="7" height="5" x="3" y="16" rx="1"/>
+          </svg>
+          <span>Admin Panel</span>
         </a>
 
         <!-- Cart Trigger Button with Live Count -->
         <button class="icon-btn cart-trigger-btn" id="cart-trigger-btn" aria-label="Open Shopping Bag">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
             <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
           </svg>
           <span class="badge-count cart-count-badge" style="display: none;">0</span>
@@ -106,10 +189,10 @@
 
         <!-- Mobile Hamburger Menu Button -->
         <button class="icon-btn mobile-menu-btn" id="mobile-menu-toggle-btn" aria-label="Open Navigation Menu">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-            <line x1="4" y1="6" x2="20" y2="6"/>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <line x1="4" y1="7" x2="20" y2="7"/>
             <line x1="4" y1="12" x2="20" y2="12"/>
-            <line x1="4" y1="18" x2="20" y2="18"/>
+            <line x1="4" y1="17" x2="20" y2="17"/>
           </svg>
         </button>
       </div>
@@ -146,32 +229,59 @@
       </div>
     </div>
 
-    <!-- Mobile Links -->
+    <!-- Mobile Links Organized by Category -->
     <div class="mobile-nav-links">
-      <a href="#" class="mobile-nav-link active">
-        <span>🏠 Home</span>
-      </a>
-      <a href="#categories" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('tees');">
-        <span>👕 Oversized Tees & Hoodies</span>
-        <span class="mobile-nav-badge">Trending</span>
-      </a>
-      <a href="#categories" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('streetwear');">
-        <span>👖 Casual & Streetwear</span>
-      </a>
-      <a href="#categories" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('formal');">
-        <span>👔 Formal & Linen Shirts</span>
-      </a>
-      <a href="#categories" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('cargo');">
-        <span>🪖 Cargo Pants & Bottoms</span>
-        <span class="mobile-nav-badge" style="background:#e0f2fe;color:#0369a1;">New</span>
-      </a>
-      <a href="#categories" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('accessories');">
-        <span>🧢 Caps & Accessories</span>
-      </a>
-      <a href="#featured-products" class="mobile-nav-link sale-link" onclick="closeMobileNav(); filterCategory('sale');">
-        <span>🔥 Clearance & Hot Deals</span>
-        <span class="badge-sale-small">Up to 40% Off</span>
-      </a>
+      <div class="mobile-nav-group">
+        <div class="mobile-nav-group-title">Men</div>
+        <a href="#featured-products" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('tees');">
+          <span>Oversized Tees</span>
+        </a>
+        <a href="#featured-products" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('hoodies');">
+          <span>Hoodies</span>
+        </a>
+        <a href="#featured-products" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('cargos');">
+          <span>Cargo Pants</span>
+        </a>
+        <a href="#featured-products" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('formal');">
+          <span>Formal Shirts</span>
+        </a>
+      </div>
+
+      <div class="mobile-nav-group">
+        <div class="mobile-nav-group-title">Women</div>
+        <a href="#featured-products" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('cropped');">
+          <span>Cropped Fits</span>
+        </a>
+        <a href="#featured-products" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('tees');">
+          <span>Oversized Tees</span>
+        </a>
+        <a href="#featured-products" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('loungewear');">
+          <span>Loungewear</span>
+        </a>
+        <a href="#featured-products" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('dresses');">
+          <span>Dresses</span>
+        </a>
+      </div>
+
+      <div class="mobile-nav-group">
+        <div class="mobile-nav-group-title">Kids &amp; Teens</div>
+        <a href="#featured-products" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('casual-tees');">
+          <span>Casual Tees</span>
+        </a>
+        <a href="#featured-products" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('shorts');">
+          <span>Shorts</span>
+        </a>
+        <a href="#featured-products" class="mobile-nav-link" onclick="closeMobileNav(); filterCategory('matching-sets');">
+          <span>Matching Sets</span>
+        </a>
+      </div>
+
+      <div class="mobile-nav-group">
+        <a href="#featured-products" class="mobile-nav-link sale-link" onclick="closeMobileNav(); filterCategory('sale');">
+          <span>🔥 Archive Sale</span>
+          <span class="badge-sale-hot">HOT</span>
+        </a>
+      </div>
     </div>
 
     <!-- Mobile Quick Info & WhatsApp CTA -->
@@ -201,47 +311,47 @@
       <div class="hero-bottom-fade"></div>
       <div class="container hero-banner-inner">
         
-        <!-- Hero Text Content (Neatly Positioned on Left over Background) -->
+        <!-- Hero Text Content (Editorial Campaign Aesthetic) -->
         <div class="hero-content">
           <div class="hero-tag">
             <span class="hero-tag-dot"></span>
-            Fresh Drop Vol. 04 &bull; Modern Fits for Everyday Living
+            AUTUMN / WINTER EDIT &bull; ATELIER ARCHIVE 2026
           </div>
 
           <h1 class="hero-title">
-            Trending Fashion, Straight to Your <span class="highlight">Doorstep.</span>
+            Elevated Streetwear, <br>Crafted for Daily Wear
           </h1>
 
           <p class="hero-subtitle">
-            Upgrade your everyday rotation with heavyweight oversized tees, relaxed linen silhouettes, and curated streetwear engineered for premium comfort.
+            Curated oversized silhouettes, loopback French terry fleece, and pure flax linen essentials engineered for effortless comfort and architectural drape.
           </p>
 
           <div class="hero-cta-group">
             <a href="#featured-products" class="btn btn-accent">
-              Shop New Arrivals
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              Explore Collection
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </a>
 
-            <a href="https://wa.me/94771234567?text=Hello%20ThreadVibe%21%20I%20would%20like%20to%20browse%20your%20latest%20catalog%20and%20offers." target="_blank" class="btn btn-outline-white">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color: #25d366;">
+            <a href="https://wa.me/94771234567?text=Hello%20ThreadVibe%20Atelier%2C%20I%20would%20like%20to%20view%20your%20curated%20collection%20and%20lookbook." target="_blank" class="btn btn-outline-white">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" style="color: var(--color-accent);">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
               </svg>
-              Quick WhatsApp Order
+              Private Concierge
             </a>
           </div>
 
           <div class="hero-stats">
             <div class="stat-item">
-              <span class="stat-number">4.9 / 5.0</span>
-              <span class="stat-label">★★★★★ Rated by Buyers</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-number">10k+</span>
-              <span class="stat-label">Orders Delivered Islandwide</span>
+              <span class="stat-number">4.95 / 5.0</span>
+              <span class="stat-label">★★★★★ Verified Atelier Rating</span>
             </div>
             <div class="stat-item">
               <span class="stat-number">100%</span>
-              <span class="stat-label">Premium Combed Cotton</span>
+              <span class="stat-label">Combed Heavyweight Cotton</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">10k+</span>
+              <span class="stat-label">Delivered Islandwide</span>
             </div>
           </div>
         </div>
@@ -250,61 +360,61 @@
     </section>
 
     <!-- ==========================================================================
-         Trust & Policy Strip
+         Trust & Policy Strip — Atelier Standards
          ========================================================================== -->
     <section class="trust-strip">
       <div class="container trust-grid">
         <div class="trust-item">
           <div class="trust-icon-box">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="13" x="1" y="6" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="16" height="13" x="1" y="6" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
           </div>
           <div class="trust-text">
             <h4>Islandwide Delivery</h4>
-            <p>Fast dispatch with Cash on Delivery (COD) to all 25 districts.</p>
+            <p>Direct courier dispatch with Cash on Delivery (COD) across all 25 districts.</p>
           </div>
         </div>
 
         <div class="trust-item">
           <div class="trust-icon-box">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           </div>
           <div class="trust-text">
-            <h4>Easy 7-Day Exchanges</h4>
-            <p>Wrong size? We will exchange it quickly right at your door.</p>
+            <h4>7-Day Concierge Exchange</h4>
+            <p>Seamless door-to-door sizing exchanges handled within 48 hours.</p>
           </div>
         </div>
 
         <div class="trust-item">
           <div class="trust-icon-box">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
           <div class="trust-text">
-            <h4>100% Cotton Quality</h4>
-            <p>Heavyweight GSM, pre-shrunk, color-fast premium fabrics.</p>
+            <h4>Heavyweight Fabric Craft</h4>
+            <p>260–380 GSM combed cotton. Pre-shrunk, bio-washed, and color-locked.</p>
           </div>
         </div>
 
         <div class="trust-item">
           <div class="trust-icon-box">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           </div>
           <div class="trust-text">
-            <h4>WhatsApp Support</h4>
-            <p>Direct chat assistance for sizing & rapid tracking updates.</p>
+            <h4>VIP WhatsApp Support</h4>
+            <p>Direct styling advice, bespoke fit consultation, and real-time tracking.</p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ==========================================================================
-         Category Quick-Picks (Visual Grid)
+         Category Quick-Picks — Campaign Lookbook
          ========================================================================== -->
     <section class="section" id="categories">
       <div class="container">
         <div class="section-header">
-          <span class="section-tag">Explore Styles</span>
+          <span class="section-tag">CURATED ARCHIVES</span>
           <h2 class="section-title">Category Quick-Picks</h2>
-          <p class="section-subtitle">Discover curated drops crafted for versatility, street culture, and effortless style.</p>
+          <p class="section-subtitle">Architectural cuts and tactile textures engineered for contemporary lifestyle.</p>
         </div>
 
         <div class="category-grid category-grid-6">
@@ -313,11 +423,11 @@
             <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=700&q=80" alt="Oversized Tees &amp; Hoodies" class="category-bg" loading="lazy">
             <div class="category-overlay"></div>
             <div class="category-content">
-              <span class="category-count">18 Styles</span>
-              <h3 class="category-name">Oversized Tees &amp; Hoodies</h3>
+              <span class="category-count">01 &bull; ARCHIVE</span>
+              <h3 class="category-name">Oversized &amp; Hoodies</h3>
               <span class="category-link-text">
-                Browse Collection
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                Explore Edit
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </span>
             </div>
           </div>
@@ -327,11 +437,11 @@
             <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=80" alt="Casual &amp; Streetwear" class="category-bg" loading="lazy">
             <div class="category-overlay"></div>
             <div class="category-content">
-              <span class="category-count">24 Styles</span>
+              <span class="category-count">02 &bull; ESSENTIALS</span>
               <h3 class="category-name">Casual &amp; Streetwear</h3>
               <span class="category-link-text">
-                Browse Collection
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                Explore Edit
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </span>
             </div>
           </div>
@@ -341,55 +451,55 @@
             <img src="https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=700&q=80" alt="Formal &amp; Office Wear" class="category-bg" loading="lazy">
             <div class="category-overlay"></div>
             <div class="category-content">
-              <span class="category-count">14 Styles</span>
-              <h3 class="category-name">Formal &amp; Office Wear</h3>
+              <span class="category-count">03 &bull; ATELIER</span>
+              <h3 class="category-name">Tailored &amp; Linen</h3>
               <span class="category-link-text">
-                Browse Collection
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                Explore Edit
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </span>
             </div>
           </div>
 
-          <!-- Category 4: Cargo Pants & Bottoms (NEW) -->
+          <!-- Category 4: Cargo Pants & Bottoms -->
           <div class="category-card" onclick="filterCategory('cargo')">
-            <span class="category-badge-new">New</span>
+            <span class="category-badge-new">NEW DROP</span>
             <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=700&q=80" alt="Cargo Pants &amp; Bottoms" class="category-bg" loading="lazy">
             <div class="category-overlay"></div>
             <div class="category-content">
-              <span class="category-count">10 Styles</span>
-              <h3 class="category-name">Cargo Pants &amp; Bottoms</h3>
+              <span class="category-count">04 &bull; UTILITY</span>
+              <h3 class="category-name">Cargos &amp; Bottoms</h3>
               <span class="category-link-text">
-                Browse Collection
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                Explore Edit
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </span>
             </div>
           </div>
 
-          <!-- Category 5: Caps & Accessories (NEW) -->
+          <!-- Category 5: Caps & Accessories -->
           <div class="category-card" onclick="filterCategory('accessories')">
             <img src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=700&q=80" alt="Caps &amp; Accessories" class="category-bg" loading="lazy">
             <div class="category-overlay"></div>
             <div class="category-content">
-              <span class="category-count">16 Styles</span>
-              <h3 class="category-name">Caps &amp; Accessories</h3>
+              <span class="category-count">05 &bull; OBJECTS</span>
+              <h3 class="category-name">Caps &amp; Accents</h3>
               <span class="category-link-text">
-                Browse Collection
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                Explore Edit
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </span>
             </div>
           </div>
 
           <!-- Category 6: Clearance / Hot Deals -->
           <div class="category-card" onclick="filterCategory('sale')">
-            <span class="category-badge-sale">Up to 40% Off</span>
-            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=700&q=80" alt="Clearance Hot Deals" class="category-bg" loading="lazy">
+            <span class="category-badge-sale">ARCHIVE SALE</span>
+            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=700&q=80" alt="Archive Clearance Deals" class="category-bg" loading="lazy">
             <div class="category-overlay"></div>
             <div class="category-content">
-              <span class="category-count">Limited Stock</span>
-              <h3 class="category-name">Clearance / Hot Deals 🔥</h3>
+              <span class="category-count">06 &bull; PRIVÉ</span>
+              <h3 class="category-name">Curated Specials</h3>
               <span class="category-link-text">
-                Shop Deals
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                View Reductions
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </span>
             </div>
           </div>
@@ -398,25 +508,25 @@
     </section>
 
     <!-- ==========================================================================
-         Featured Products Showcase
+         Featured Products Showcase — The Atelier Archive
          ========================================================================== -->
-    <section class="section" id="featured-products" style="background: #ffffff;">
+    <section class="section" id="featured-products">
       <div class="container">
         <div class="section-header">
-          <span class="section-tag">Curated Fits</span>
-          <h2 class="section-title">Featured Products Showcase</h2>
-          <p class="section-subtitle">Real-time stock indicators, front & back hover angles, and instant 1-click WhatsApp ordering.</p>
+          <span class="section-tag">CURATED ATELIER EDIT</span>
+          <h2 class="section-title">Trending Fashion &bull; Featured Products</h2>
+          <p class="section-subtitle">Fine-gauge craftsmanship, dual perspective angles, and seamless instant 1-click WhatsApp checkout.</p>
         </div>
 
         <!-- Filter Tabs -->
         <div class="filter-tabs-wrapper">
-          <button class="filter-tab active" data-category="all">All Drops</button>
-          <button class="filter-tab" data-category="tees">Oversized Tees &amp; Hoodies</button>
-          <button class="filter-tab" data-category="streetwear">Casual &amp; Streetwear</button>
-          <button class="filter-tab" data-category="formal">Formal &amp; Office Wear</button>
-          <button class="filter-tab" data-category="cargo">Cargo Pants &amp; Bottoms</button>
-          <button class="filter-tab" data-category="accessories">Caps &amp; Accessories</button>
-          <button class="filter-tab" data-category="sale">Clearance / Hot Deals 🔥</button>
+          <button class="filter-tab active" data-category="all">All Pieces</button>
+          <button class="filter-tab" data-category="tees">Oversized &amp; Hoodies</button>
+          <button class="filter-tab" data-category="streetwear">Streetwear</button>
+          <button class="filter-tab" data-category="formal">Tailored &amp; Linen</button>
+          <button class="filter-tab" data-category="cargo">Cargos &amp; Pants</button>
+          <button class="filter-tab" data-category="accessories">Accessories</button>
+          <button class="filter-tab" data-category="sale">Archive Sale</button>
         </div>
 
         <!-- Dynamic Products Grid (Rendered via app.js) -->
@@ -427,7 +537,7 @@
     </section>
 
     <!-- ==========================================================================
-         WhatsApp Instant Ordering Feature (Crucial for FB/IG Sellers)
+         WhatsApp Concierge — The Private Atelier Salon
          ========================================================================== -->
     <section class="container">
       <div class="whatsapp-banner-section">
@@ -435,60 +545,60 @@
         <div class="whatsapp-banner-grid">
           <div>
             <span class="whatsapp-pill-badge">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-              Social Commerce Ready
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              PRIVATE CONCIERGE
             </span>
-            <h2 class="whatsapp-banner-title">Love Ordering on WhatsApp? We Made It 1-Click Fast.</h2>
+            <h2 class="whatsapp-banner-title">Instant WhatsApp Commerce &bull; Tailored to You.</h2>
             <p class="whatsapp-banner-desc">
-              No complicated account creation needed. Click "Order via WhatsApp" on any product and your item details, selected size, and link will be auto-filled directly into our chat!
+              Experience seamless VIP commerce without accounts or friction. Select your size and click "Order via WhatsApp" — your piece is reserved with immediate stylist assistance.
             </p>
 
             <div class="whatsapp-steps">
               <div class="step-box">
                 <div class="step-num">01</div>
-                <div class="step-text">Choose your fit & select your size (S, M, L, XL).</div>
+                <div class="step-text">Choose your garment &amp; desired size (S, M, L, XL).</div>
               </div>
               <div class="step-box">
                 <div class="step-num">02</div>
-                <div class="step-text">Hit <strong>Order via WhatsApp</strong> on the item.</div>
+                <div class="step-text">Tap <strong>Order via WhatsApp</strong> on the piece.</div>
               </div>
               <div class="step-box">
                 <div class="step-num">03</div>
-                <div class="step-text">Send your address & choose Cash on Delivery!</div>
+                <div class="step-text">Confirm delivery address for direct Cash on Delivery.</div>
               </div>
             </div>
 
-            <a href="https://wa.me/94771234567?text=Hello%20ThreadVibe!%20I%20want%20to%20order%20the%20latest%20oversized%20fits." target="_blank" class="btn btn-whatsapp whatsapp-cta-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-              Chat With Our Stylist on WhatsApp
+            <a href="https://wa.me/94771234567?text=Hello%20ThreadVibe%20Atelier%2C%20I%20would%20like%20to%20consult%20a%20stylist%20for%20an%20order." target="_blank" class="btn btn-whatsapp whatsapp-cta-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              Consult an Atelier Stylist
             </a>
           </div>
 
-          <!-- WhatsApp Realistic Chat Interface Mockup -->
+          <!-- WhatsApp Luxury Concierge Chat Mockup -->
           <div class="whatsapp-chat-preview">
             <div class="chat-header">
               <div class="chat-avatar">TV</div>
               <div class="chat-user-info">
-                <h6>ThreadVibe Order Desk</h6>
-                <p>● Online | Usually replies instantly</p>
+                <h6>ThreadVibe Private Concierge</h6>
+                <p>● Live &bull; Immediate Stylist Response</p>
               </div>
             </div>
             <div class="chat-body">
               <div class="chat-bubble user">
-                Hello ThreadVibe! 👋<br>
-                I want to order:<br>
+                Hello ThreadVibe Atelier 👋<br>
+                Reserving piece:<br>
                 👕 <strong>Heavyweight Boxy Tee - Charcoal Acid</strong><br>
                 📏 Size: <strong>L</strong> &bull; Rs. 2,850<br>
-                COD to Kandy please!
-                <span class="timestamp">10:42 AM &bull; ✓✓</span>
+                Dispatch to Colombo 07 via COD please.
+                <span class="timestamp">11:15 AM &bull; ✓✓</span>
               </div>
               <div class="chat-bubble bot">
-                Hey Shanil! ❤️ Thanks for choosing ThreadVibe. We have reserved Size L for you. Your package will dispatch today via prompt courier with Cash on Delivery! 🚚
-                <span class="timestamp">10:43 AM</span>
+                Greetings from the Atelier! ✨ Your Size L has been reserved. Dispatching today via express courier with direct Cash on Delivery. 🚚
+                <span class="timestamp">11:16 AM</span>
               </div>
               <div class="chat-bubble user">
-                Awesome, thank you so much! Super fast service 🔥
-                <span class="timestamp">10:44 AM &bull; ✓✓</span>
+                Exceptional service. Thank you!
+                <span class="timestamp">11:17 AM &bull; ✓✓</span>
               </div>
             </div>
           </div>
@@ -498,14 +608,14 @@
     </section>
 
     <!-- ==========================================================================
-         Trust & Social Proof Section (Reviews Slider / Cards)
+         Client Chronicles — Verified Customer Reviews
          ========================================================================== -->
     <section class="section social-proof-section">
       <div class="container">
         <div class="section-header">
-          <span class="section-tag">Loved by 10,000+ Customers</span>
-          <h2 class="section-title">Verified Customer Reviews</h2>
-          <p class="section-subtitle">Real feedback from Facebook, Instagram, and web customers across Sri Lanka.</p>
+          <span class="section-tag">CLIENT CHRONICLES</span>
+          <h2 class="section-title">Verified Atelier Reviews</h2>
+          <p class="section-subtitle">Real reflections from clients across Colombo, Kandy, Galle, and islandwide.</p>
         </div>
 
         <div class="reviews-grid">
@@ -513,19 +623,19 @@
           <div class="review-card">
             <div class="review-stars">★★★★★</div>
             <p class="review-text">
-              "Honestly the best heavyweight oversized tee I've bought in Sri Lanka. The 260 GSM fabric feels crazy premium and hasn't shrunk after 4 washes. WhatsApp ordering was so fast!"
+              "The 260 GSM combed cotton has an impeccable drape. Holds its architectural silhouette perfectly through multiple washes. WhatsApp concierge checkout is unmatched in convenience."
             </p>
-            <span class="review-product-tag">Heavyweight Boxy Tee (Charcoal)</span>
+            <span class="review-product-tag">Heavyweight Boxy Tee &bull; Charcoal</span>
             <div class="review-author">
               <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Kavinda Perera" class="author-img">
               <div class="author-info">
                 <h5>
                   Kavinda P.
-                  <span class="verified-badge" title="Verified Buyer">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                  <span class="verified-badge" title="Verified Client">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
                   </span>
                 </h5>
-                <span class="author-location">Colombo 05 &bull; Facebook Customer</span>
+                <span class="author-location">Colombo 05 &bull; Verified Client</span>
               </div>
             </div>
           </div>
@@ -534,19 +644,19 @@
           <div class="review-card">
             <div class="review-stars">★★★★★</div>
             <p class="review-text">
-              "The linen shirt is top tier. Ordered on WhatsApp on Tuesday afternoon and received it Thursday morning in Kandy via Cash on Delivery. Perfect fit for hot weather!"
+              "The terracotta linen shirt is extraordinary. Ordered Tuesday afternoon, arrived Thursday morning in Kandy via Cash on Delivery. Incredibly breathable in tropical heat."
             </p>
-            <span class="review-product-tag">Relaxed Linen Shirt (Terracotta)</span>
+            <span class="review-product-tag">Relaxed Linen Shirt &bull; Terracotta</span>
             <div class="review-author">
               <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Dinuka Silva" class="author-img">
               <div class="author-info">
                 <h5>
                   Dinuka Silva
-                  <span class="verified-badge" title="Verified Buyer">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                  <span class="verified-badge" title="Verified Client">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
                   </span>
                 </h5>
-                <span class="author-location">Kandy &bull; Repeat Buyer</span>
+                <span class="author-location">Kandy &bull; Repeat Collector</span>
               </div>
             </div>
           </div>
@@ -555,19 +665,19 @@
           <div class="review-card">
             <div class="review-stars">★★★★★</div>
             <p class="review-text">
-              "I bought the cargo pants and sage hoodie. I had to exchange the hoodie for a larger size, and their 7-day exchange team handled it effortlessly without any delay. Highly recommended!"
+              "Secured the sage loopback hoodie and ripstop cargos. Needed a size exchange on the hoodie and their concierge handled it door-to-door within 48 hours without friction."
             </p>
-            <span class="review-product-tag">French Terry Hoodie & Cargos</span>
+            <span class="review-product-tag">French Terry Hoodie &amp; Utility Cargos</span>
             <div class="review-author">
               <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" alt="Oshadhi Ranasinghe" class="author-img">
               <div class="author-info">
                 <h5>
                   Oshadhi R.
-                  <span class="verified-badge" title="Verified Buyer">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                  <span class="verified-badge" title="Verified Client">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
                   </span>
                 </h5>
-                <span class="author-location">Galle &bull; Instagram Customer</span>
+                <span class="author-location">Galle &bull; Verified Client</span>
               </div>
             </div>
           </div>
@@ -577,81 +687,97 @@
   </main>
 
   <!-- ==========================================================================
-       Footer
+       Editorial Footer — Atelier Archive
        ========================================================================== -->
   <footer class="footer">
     <div class="container">
+      <!-- Newsletter VIP Atelier Invite -->
+      <div class="footer-newsletter-wrap">
+        <div class="newsletter-text">
+          <span class="newsletter-tag">EXCLUSIVE DROPS &bull; PRIVÉ ACCESS</span>
+          <h3 class="newsletter-title">Join the Atelier Society</h3>
+          <p class="newsletter-subtitle">Receive private drop invitations, early lookbook access, and limited capsule announcements.</p>
+        </div>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Welcome to the ThreadVibe Atelier Society.');">
+          <input type="email" class="newsletter-input" placeholder="Enter your email address" required>
+          <button type="submit" class="btn btn-accent newsletter-btn">Subscribe</button>
+        </form>
+      </div>
+
       <div class="footer-grid">
         <!-- Brand Summary -->
         <div class="footer-brand">
           <a href="#" class="brand-logo" style="color: #ffffff;">
             <div class="brand-icon">
               <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 7H22" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round"/>
-                <path d="M14 7V17C14 20.5 10 20.5 10 17V13C10 10.5 14 10.5 16 13.5L20.5 20.5" stroke="#E07A5F" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6 8H22" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M14 8V18C14 21 10.5 21 10.5 18V14C10.5 11.5 14 11.5 16 14.5L20.5 21" stroke="var(--color-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
-            <span>Thread<span>Vibe</span></span>
+            <div class="brand-text-wrap">
+              <span class="brand-name">THREADVIBE</span>
+              <span class="brand-tagline">ATELIER &bull; ARCHIVE</span>
+            </div>
           </a>
           <p>
-            Modern Fits for Everyday Living. Crafted with heavyweight combed cotton and tailored for effortless comfort across Sri Lanka.
+            Curated modern fits engineered for discerning everyday living. Heavyweight textiles, architectural drape, and islandwide prompt courier delivery.
           </p>
           <div class="footer-socials">
             <a href="#" class="social-link" aria-label="Facebook">
-              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
             </a>
             <a href="#" class="social-link" aria-label="Instagram">
-              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
             </a>
-            <a href="https://wa.me/94771234567" target="_blank" class="social-link" aria-label="WhatsApp">
-              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            <a href="https://wa.me/94771234567" target="_blank" class="social-link" aria-label="WhatsApp Concierge">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
             </a>
           </div>
         </div>
 
-        <!-- Quick Links -->
+        <!-- Collections -->
         <div>
           <h4 class="footer-title">Collections</h4>
           <div class="footer-links">
-            <a href="#featured-products" onclick="filterCategory('tees')">Oversized Tees & Hoodies</a>
-            <a href="#featured-products" onclick="filterCategory('streetwear')">Casual & Streetwear</a>
-            <a href="#featured-products" onclick="filterCategory('formal')">Formal & Office Wear</a>
-            <a href="#featured-products" onclick="filterCategory('cargo')">Cargo Pants & Bottoms</a>
-            <a href="#featured-products" onclick="filterCategory('accessories')">Caps & Accessories</a>
-            <a href="#featured-products" onclick="filterCategory('sale')">Clearance & Hot Deals 🔥</a>
+            <a href="#featured-products" onclick="filterCategory('tees')">Oversized &amp; Hoodies</a>
+            <a href="#featured-products" onclick="filterCategory('streetwear')">Streetwear Essentials</a>
+            <a href="#featured-products" onclick="filterCategory('formal')">Tailored &amp; Pure Linen</a>
+            <a href="#featured-products" onclick="filterCategory('cargo')">Utility Cargos &amp; Pants</a>
+            <a href="#featured-products" onclick="filterCategory('accessories')">Caps &amp; Objects</a>
+            <a href="#featured-products" onclick="filterCategory('sale')">Archive Reductions</a>
           </div>
         </div>
 
-        <!-- Customer Care -->
+        <!-- Client Care -->
         <div>
-          <h4 class="footer-title">Customer Care</h4>
+          <h4 class="footer-title">Client Care</h4>
           <div class="footer-links">
-            <a href="javascript:void(0)" onclick="alert('Islandwide delivery takes 1-3 working days. Cash on Delivery is supported to all 25 districts.')">Delivery & COD Info</a>
-            <a href="javascript:void(0)" onclick="alert('We offer hassle-free 7-day size exchanges. Just contact us on WhatsApp!')">7-Day Exchanges</a>
-            <a href="javascript:void(0)" onclick="alert('ThreadVibe uses standard relaxed oversized fit charts: S (38), M (40), L (42), XL (44).')">Size Guide</a>
-            <a href="javascript:void(0)" onclick="alert('Wash cold with similar colors. Do not iron directly on graphics.')">Fabric & Wash Care</a>
-            <a href="https://wa.me/94771234567" target="_blank">Track WhatsApp Order</a>
+            <a href="javascript:void(0)" onclick="alert('Islandwide delivery takes 1-3 working days. Cash on Delivery is supported to all 25 districts.')">Delivery &amp; COD Terms</a>
+            <a href="javascript:void(0)" onclick="alert('We offer hassle-free 7-day size exchanges. Just contact us on WhatsApp!')">7-Day Concierge Exchange</a>
+            <a href="javascript:void(0)" onclick="alert('ThreadVibe uses standard relaxed oversized fit charts: S (38), M (40), L (42), XL (44).')">Bespoke Sizing Guide</a>
+            <a href="javascript:void(0)" onclick="alert('Wash cold with similar colors. Do not iron directly on graphics.')">Fabric Care Guide</a>
+            <a href="https://wa.me/94771234567" target="_blank">Track WhatsApp Dispatch</a>
             <a href="/admin.html" style="font-weight: 600; color: var(--color-accent); display: inline-flex; align-items: center; gap: 0.3rem;">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="3" height="9" x="3" y="3" rx="1"/><rect width="3" height="5" x="14" y="3" rx="1"/><rect width="3" height="9" x="14" y="12" rx="1"/><rect width="3" height="5" x="3" y="16" rx="1"/></svg>
-              Admin Dashboard
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="3" height="9" x="3" y="3" rx="1"/><rect width="3" height="5" x="14" y="3" rx="1"/><rect width="3" height="9" x="14" y="12" rx="1"/><rect width="3" height="5" x="3" y="16" rx="1"/></svg>
+              Atelier Portal
             </a>
           </div>
         </div>
 
-        <!-- Contact & WhatsApp Hotline -->
+        <!-- Contact & Concierge Hotline -->
         <div>
-          <h4 class="footer-title">Direct Inquiries</h4>
+          <h4 class="footer-title">Direct Concierge</h4>
           <div class="footer-contact-info">
             <div class="contact-item">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              <span>+94 77 123 4567 (WhatsApp / Hotline)</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span>+94 77 123 4567 (Concierge Desk)</span>
             </div>
             <div class="contact-item">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-              <span>orders@threadvibe.lk</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <span>atelier@threadvibe.lk</span>
             </div>
             <div class="contact-item">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
               <span>Colombo 03, Sri Lanka</span>
             </div>
           </div>
@@ -661,10 +787,10 @@
       <!-- Bottom Bar -->
       <div class="footer-bottom">
         <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-          <span>&copy; 2026 ThreadVibe Apparel. All rights reserved. Modern Fits for Everyday Living.</span>
-          <a href="/admin.html" class="admin-pill-btn" title="Admin Dashboard">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="3" height="9" x="3" y="3" rx="1"/><rect width="3" height="5" x="14" y="3" rx="1"/><rect width="3" height="9" x="14" y="12" rx="1"/><rect width="3" height="5" x="3" y="16" rx="1"/></svg>
-            Admin Panel
+          <span>&copy; 2026 ThreadVibe Atelier. All rights reserved. Curated Modern Fits.</span>
+          <a href="/admin.html" class="admin-pill-btn" title="Atelier Portal">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="3" height="9" x="3" y="3" rx="1"/><rect width="3" height="5" x="14" y="3" rx="1"/><rect width="3" height="9" x="14" y="12" rx="1"/><rect width="3" height="5" x="3" y="16" rx="1"/></svg>
+            Portal
           </a>
         </div>
         <div class="payment-icons">
@@ -730,13 +856,6 @@
        ========================================================================== -->
   <div class="modal-backdrop" id="quickview-backdrop">
     <div class="modal-card">
-      <button type="button" class="modal-back-btn" id="quickview-back-btn" aria-label="Back to Store">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="19" y1="12" x2="5" y2="12"></line>
-          <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-        <span>Back to Store</span>
-      </button>
       <button type="button" class="modal-close-btn" id="quickview-close-btn" aria-label="Close modal">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
       </button>

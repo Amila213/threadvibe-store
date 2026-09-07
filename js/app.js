@@ -48,8 +48,8 @@ let PRODUCTS = [
     sizes: ['M', 'L', 'XL', 'XXL'],
     selectedSize: 'L',
     description: 'Premium 380 GSM loopback French terry with double-layered hood, concealed kangaroo pocket, and matte metal aglets. Super soft interior.',
-    imageFront: '/uploads/hoodie.jpg',
-    imageBack: '/uploads/hoodie.jpg'
+    imageFront: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80',
+    imageBack: 'https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'tv-03',
@@ -66,8 +66,8 @@ let PRODUCTS = [
     sizes: ['30', '32', '34', '36'],
     selectedSize: '32',
     description: 'Cotton ripstop construction with 6 functional deep ergonomic pockets, adjustable ankle bungee toggles, and elastic waistband with drawstrings.',
-    imageFront: '/uploads/cargo_pants.jpg',
-    imageBack: '/uploads/cargo_pants.jpg'
+    imageFront: 'https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=800&q=80',
+    imageBack: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'tv-04',
@@ -84,8 +84,8 @@ let PRODUCTS = [
     sizes: ['S', 'M', 'L', 'XL'],
     selectedSize: 'M',
     description: 'Breathable pure flax linen blended with organic cotton. Spread collar, coconut shell buttons, lightweight drape engineered for tropical Sri Lankan heat.',
-    imageFront: '/uploads/linen_shirt.jpg',
-    imageBack: '/uploads/linen_shirt.jpg'
+    imageFront: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=800&q=80',
+    imageBack: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'tv-05',
@@ -258,6 +258,7 @@ const cart = new CartState();
 document.addEventListener('DOMContentLoaded', () => {
   initDarkMode(); // must be first to prevent FOUC
   renderProducts('all');
+  initDropdowns();
   initFilterTabs();
   initSearch();
   initMobileNav();
@@ -429,22 +430,58 @@ function renderProducts(categoryFilter = 'all', searchQuery = '') {
   const grid = document.getElementById('products-grid');
   if (!grid) return;
 
+  const filterKey = (categoryFilter || 'all').toLowerCase();
+
   let filtered = PRODUCTS.filter(p => {
-    const matchesCategory = (categoryFilter === 'all') || 
-                            (categoryFilter === p.category) || 
-                            (categoryFilter === 'sale' && p.discountPercent >= 20);
-    const matchesSearch = !searchQuery || 
-                          p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          p.categoryName.toLowerCase().includes(searchQuery.toLowerCase());
+    const cat = (p.category || '').toLowerCase();
+    const catName = (p.categoryName || '').toLowerCase();
+    const name = (p.name || '').toLowerCase();
+    const desc = (p.description || '').toLowerCase();
+
+    let matchesCategory = false;
+    if (filterKey === 'all') {
+      matchesCategory = true;
+    } else if (filterKey === 'sale') {
+      matchesCategory = (p.discountPercent >= 20 || cat === 'sale');
+    } else if (filterKey === 'hoodies') {
+      matchesCategory = name.includes('hoodie') || desc.includes('hoodie') || cat.includes('hoodie');
+    } else if (filterKey === 'cargos' || filterKey === 'cargo') {
+      matchesCategory = name.includes('cargo') || desc.includes('cargo') || cat.includes('cargo') || cat === 'streetwear';
+    } else if (filterKey === 'formal') {
+      matchesCategory = cat === 'formal' || name.includes('shirt') || name.includes('formal') || name.includes('linen');
+    } else if (filterKey === 'tees' || filterKey === 'oversized-tees') {
+      matchesCategory = cat === 'tees' || name.includes('tee') || desc.includes('tee') || name.includes('crewneck');
+    } else if (filterKey === 'casual-tees') {
+      matchesCategory = cat === 'tees' || name.includes('tee') || desc.includes('tee');
+    } else if (filterKey === 'cropped') {
+      matchesCategory = name.includes('crop') || desc.includes('crop') || cat === 'tees';
+    } else if (filterKey === 'loungewear') {
+      matchesCategory = name.includes('hoodie') || name.includes('crewneck') || name.includes('trouser') || cat === 'tees';
+    } else if (filterKey === 'dresses') {
+      matchesCategory = name.includes('dress') || cat === 'formal' || cat === 'tees';
+    } else if (filterKey === 'shorts') {
+      matchesCategory = name.includes('short') || cat === 'streetwear';
+    } else if (filterKey === 'matching-sets') {
+      matchesCategory = name.includes('set') || cat === 'streetwear' || cat === 'tees';
+    } else {
+      matchesCategory = (cat === filterKey) || name.includes(filterKey) || catName.includes(filterKey);
+    }
+
+    const query = (searchQuery || '').toLowerCase();
+    const matchesSearch = !query || 
+                          name.includes(query) || 
+                          catName.includes(query) ||
+                          desc.includes(query);
+
     return matchesCategory && matchesSearch;
   });
 
   if (filtered.length === 0) {
     grid.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem;">
-        <p style="font-size: 1.1rem; color: var(--color-text-muted);">No products found matching your filter.</p>
-        <button onclick="renderProducts('all')" class="btn btn-primary" style="margin-top: 1rem; padding: 0.6rem 1.4rem;">
-          View All Products
+        <p style="font-size: 1.1rem; color: var(--color-text-muted);">No products currently found in this edit.</p>
+        <button onclick="renderProducts('all')" class="btn btn-accent" style="margin-top: 1rem; padding: 0.7rem 1.6rem;">
+          View All Pieces
         </button>
       </div>
     `;
@@ -454,16 +491,17 @@ function renderProducts(categoryFilter = 'all', searchQuery = '') {
   grid.innerHTML = filtered.map(p => `
     <article class="product-card" data-id="${p.id}">
       <div class="product-image-box" onclick="openQuickView('${p.id}')">
-        <!-- Dual Angle Images for Hover Flip -->
-        <img src="${p.imageFront}" alt="${p.name} - Front Angle" class="product-img img-front" loading="lazy">
-        <img src="${p.imageBack}" alt="${p.name} - Back Angle" class="product-img img-back" loading="lazy">
+        <!-- Dual Angle Images for Smooth Hover Perspective -->
+        <img src="${p.imageFront}" alt="${p.name} - Front" class="product-img img-front" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80'">
+        <img src="${p.imageBack}" alt="${p.name} - Reverse" class="product-img img-back" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=700&q=80'">
         
         <div class="product-badges">
-          <span class="badge-tag ${p.badgeClass}">${p.badge}</span>
+          ${p.badge ? `<span class="badge-tag ${p.badgeClass}">${p.badge}</span>` : ''}
+          ${p.discountPercent ? `<span class="badge-tag badge-sale">-${p.discountPercent}%</span>` : ''}
         </div>
 
-        <button class="quick-view-btn-overlay" type="button">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        <button class="quick-view-btn-overlay" type="button" onclick="event.stopPropagation(); openQuickView('${p.id}')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
           Quick View
         </button>
       </div>
@@ -474,19 +512,18 @@ function renderProducts(categoryFilter = 'all', searchQuery = '') {
 
         <div class="product-pricing">
           <span class="price-current">Rs. ${p.currentPrice.toLocaleString()}</span>
-          <span class="price-original">Rs. ${p.originalPrice.toLocaleString()}</span>
-          <span class="discount-pill">-${p.discountPercent}%</span>
+          ${p.originalPrice > p.currentPrice ? `<span class="price-original">Rs. ${p.originalPrice.toLocaleString()}</span>` : ''}
         </div>
 
-        <div class="stock-status ${(p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 0 ? 'out-of-stock' : (p.status === 'urgent' || (p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 3 ? 'urgent' : 'in-stock')}">
+        <div class="stock-status ${(p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 0 ? 'out-of-stock' : ((p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 4 ? 'urgent' : 'in-stock')}">
           <span class="stock-dot"></span>
-          <span>${(p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 0 ? 'Out of Stock' : ((p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 5 ? `Only ${p.stockLeft !== undefined ? p.stockLeft : p.stock} items left in stock!` : 'In Stock - Ready to Dispatch')}</span>
+          <span>${(p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 0 ? 'Archive Depleted' : ((p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 4 ? `Limited Batch &bull; Only ${p.stockLeft !== undefined ? p.stockLeft : p.stock} Left` : 'In Stock &bull; Atelier Dispatch')}</span>
         </div>
 
-        <!-- Size Selector Pills -->
+        <!-- Architectural Size Selector Pills -->
         <div class="size-selector-wrap">
           <div class="size-label">
-            <span>Select Size:</span>
+            <span>Size:</span>
             <strong id="selected-size-label-${p.id}">${p.selectedSize}</strong>
           </div>
           <div class="size-pills" data-product-id="${p.id}">
@@ -501,15 +538,15 @@ function renderProducts(categoryFilter = 'all', searchQuery = '') {
           </div>
         </div>
 
-        <!-- Action Buttons -->
+        <!-- Minimalist Luxury Action Buttons -->
         <div class="card-actions">
-          <button type="button" class="btn-card-buy" onclick="addToCartClick('${p.id}')" ${(p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 0 ? 'disabled style="opacity: 0.55; cursor: not-allowed;"' : ''}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            ${(p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 0 ? 'Out of Stock' : 'Add to Cart'}
+          <button type="button" class="btn-card-buy" onclick="addToCartClick('${p.id}')" ${(p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 0 ? 'disabled style="opacity: 0.45; cursor: not-allowed;"' : ''}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            ${(p.stockLeft !== undefined ? p.stockLeft : p.stock) <= 0 ? 'Archived' : 'Add to Bag'}
           </button>
           
-          <button type="button" class="btn-card-whatsapp" onclick="orderViaWhatsApp('${p.id}')" title="Order via WhatsApp">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          <button type="button" class="btn-card-whatsapp" onclick="orderViaWhatsApp('${p.id}')" title="Concierge Order via WhatsApp">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
             Order
           </button>
         </div>
@@ -562,6 +599,59 @@ function filterCategory(categoryName) {
     target.scrollIntoView({ behavior: 'smooth' });
   }
   renderProducts(categoryName);
+}
+
+function initDropdowns() {
+  const dropdowns = document.querySelectorAll('.nav-item-dropdown');
+
+  dropdowns.forEach(dropdown => {
+    const toggle = dropdown.querySelector('.dropdown-toggle');
+    if (!toggle) return;
+
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = dropdown.classList.contains('open');
+
+      dropdowns.forEach(d => {
+        d.classList.remove('open');
+        const btn = d.querySelector('.dropdown-toggle');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        dropdown.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+      }
+    });
+
+    const items = dropdown.querySelectorAll('.dropdown-item');
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        dropdown.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-item-dropdown')) {
+      dropdowns.forEach(d => {
+        d.classList.remove('open');
+        const btn = d.querySelector('.dropdown-toggle');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      dropdowns.forEach(d => {
+        d.classList.remove('open');
+        const btn = d.querySelector('.dropdown-toggle');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
 }
 
 function initSearch() {
@@ -777,14 +867,9 @@ function closeQuickView() {
 function initQuickViewModal() {
   const backdrop = document.getElementById('quickview-backdrop');
   const closeBtn = document.getElementById('quickview-close-btn');
-  const backBtn = document.getElementById('quickview-back-btn');
 
   if (closeBtn) {
     closeBtn.addEventListener('click', closeQuickView);
-  }
-
-  if (backBtn) {
-    backBtn.addEventListener('click', closeQuickView);
   }
 
   if (backdrop) {
@@ -815,28 +900,21 @@ function openQuickView(productId) {
       </div>
 
       <div class="quickview-info">
-        <button type="button" class="quickview-back-link" onclick="closeQuickView()" aria-label="Back to Store">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-          Back to Store
-        </button>
         <div class="product-category-name">${product.categoryName}</div>
-        <h2 style="font-family: var(--font-heading); font-size: 1.55rem; font-weight: 800; margin-bottom: 0.6rem; color: var(--color-primary);">${product.name}</h2>
+        <h2 class="quickview-title">${product.name}</h2>
         
         <div class="product-pricing" style="margin-bottom: 1rem;">
           <span class="price-current" style="font-size: 1.4rem;">Rs. ${product.currentPrice.toLocaleString()}</span>
-          <span class="price-original" style="font-size: 1.05rem;">Rs. ${product.originalPrice.toLocaleString()}</span>
-          <span class="discount-pill">-${product.discountPercent}% OFF</span>
+          ${product.originalPrice > product.currentPrice ? `<span class="price-original" style="font-size: 1.05rem;">Rs. ${product.originalPrice.toLocaleString()}</span>` : ''}
+          <span class="discount-pill">-${product.discountPercent}%</span>
         </div>
 
-        <div class="stock-status ${qvStock <= 0 ? 'out-of-stock' : (product.status === 'urgent' || qvStock <= 3 ? 'urgent' : 'in-stock')}">
+        <div class="stock-status ${qvStock <= 0 ? 'out-of-stock' : (product.status === 'urgent' || qvStock <= 4 ? 'urgent' : 'in-stock')}">
           <span class="stock-dot"></span>
-          <span>${qvStock <= 0 ? 'Out of Stock' : (qvStock <= 5 ? `Urgent: Only ${qvStock} left in stock!` : 'In Stock & Ready for Immediate Dispatch')}</span>
+          <span>${qvStock <= 0 ? 'Archive Depleted' : (qvStock <= 4 ? `Limited Batch &bull; Only ${qvStock} Left` : 'In Stock &bull; Atelier Dispatch')}</span>
         </div>
 
-        <p style="font-size: 0.9rem; color: #475569; line-height: 1.6; margin-bottom: 1.5rem;">
+        <p class="quickview-description">
           ${product.description}
         </p>
 
@@ -853,33 +931,25 @@ function openQuickView(productId) {
           </div>
         </div>
 
-        <!-- Material Details & Badges (Issue #4: high-contrast dark text on white card) -->
+        <!-- Material Details & Badges -->
         <div class="quickview-spec-card">
           <div>✨ <strong>Fabric:</strong> <span>100% Super-combed breathable cotton</span></div>
           <div>🚚 <strong>Delivery:</strong> <span>1-3 working days islandwide (Cash on Delivery)</span></div>
           <div>🔄 <strong>Exchanges:</strong> <span>Hassle-free 7-day size exchange</span></div>
         </div>
 
-        <!-- Action buttons in modal (Issue #4: responsive layout preventing WhatsApp button clip) -->
+        <!-- Action buttons in modal with zero text clipping -->
         <div class="quickview-action-bar">
-          <button type="button" class="btn btn-accent" onclick="addQvToCart('${product.id}')" ${qvStock <= 0 ? 'disabled style="opacity: 0.55; cursor: not-allowed;"' : ''}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            ${qvStock <= 0 ? 'Out of Stock' : 'Add to Bag'}
+          <button type="button" class="btn btn-accent btn-qv-add" onclick="addQvToCart('${product.id}')" ${qvStock <= 0 ? 'disabled style="opacity: 0.55; cursor: not-allowed;"' : ''}>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <span>${qvStock <= 0 ? 'Out of Stock' : 'Add to Bag'}</span>
           </button>
           
-          <button type="button" class="btn btn-whatsapp" onclick="orderViaWhatsApp('${product.id}')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-            Order via WhatsApp
+          <button type="button" class="btn btn-whatsapp btn-qv-whatsapp" onclick="orderViaWhatsApp('${product.id}')">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            <span>Order via WhatsApp</span>
           </button>
         </div>
-
-        <button type="button" class="quickview-return-btn" onclick="closeQuickView()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-          Continue Browsing Catalog
-        </button>
       </div>
     </div>
   `;

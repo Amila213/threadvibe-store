@@ -42,8 +42,8 @@
     ],
     "selectedSize": "L",
     "description": "Premium 380 GSM loopback French terry with double-layered hood, concealed kangaroo pocket, and matte metal aglets. Super soft interior.",
-    "imageFront": "/uploads/hoodie.jpg",
-    "imageBack": "/uploads/hoodie.jpg"
+    "imageFront": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80",
+    "imageBack": "https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "tv-03",
@@ -65,8 +65,8 @@
     ],
     "selectedSize": "32",
     "description": "Cotton ripstop construction with 6 functional deep ergonomic pockets, adjustable ankle bungee toggles, and elastic waistband with drawstrings.",
-    "imageFront": "/uploads/cargo_pants.jpg",
-    "imageBack": "/uploads/cargo_pants.jpg"
+    "imageFront": "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=800&q=80",
+    "imageBack": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "tv-04",
@@ -88,8 +88,8 @@
     ],
     "selectedSize": "M",
     "description": "Breathable pure flax linen blended with organic cotton. Spread collar, coconut shell buttons, lightweight drape engineered for tropical Sri Lankan heat.",
-    "imageFront": "/uploads/linen_shirt.jpg",
-    "imageBack": "/uploads/linen_shirt.jpg"
+    "imageFront": "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=800&q=80",
+    "imageBack": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "tv-05",
