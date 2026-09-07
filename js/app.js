@@ -343,6 +343,43 @@ function closeMobileNav() {
     backdrop.classList.remove('active');
     drawer.classList.remove('active');
     document.body.style.overflow = '';
+    // Reset all accordion panels to closed
+    document.querySelectorAll('.mobile-nav-accord-body.open').forEach(body => {
+      body.classList.remove('open');
+      const toggle = body.previousElementSibling;
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    });
+  }
+}
+
+/**
+ * Toggle a mobile nav accordion open/closed.
+ * Closes sibling accordions (only one open at a time) for a clean feel.
+ */
+function toggleMobileAccordion(accordionId) {
+  const accordion = document.getElementById(accordionId);
+  if (!accordion) return;
+
+  const toggle = accordion.querySelector('.mobile-nav-accord-toggle');
+  const body = accordion.querySelector('.mobile-nav-accord-body');
+  const isOpen = body.classList.contains('open');
+
+  // Close all other open accordions first
+  document.querySelectorAll('.mobile-nav-accord-body.open').forEach(openBody => {
+    if (openBody !== body) {
+      openBody.classList.remove('open');
+      const otherToggle = openBody.previousElementSibling;
+      if (otherToggle) otherToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // Toggle this one
+  if (isOpen) {
+    body.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  } else {
+    body.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
   }
 }
 
