@@ -3409,37 +3409,43 @@ html.dark .mobile-nav-accord-body {
   }
 
   /* Strict Left Bounding for Overlay Content */
-  .hero-content, .hero-inner, .hero-section > .container {
-    width: 45% !important;
-    max-width: 45% !important;
+  .hero-content, .hero-inner, .hero-section > .container, .hero-section .hero-banner-inner {
+    width: 54% !important;
+    max-width: 54% !important;
     margin-left: clamp(8px, 2.5vw, 24px) !important;
     margin-right: auto !important;
-    padding: 0 !important;
+    padding: 0 0 12px 0 !important;
+    padding-bottom: 12px !important;
     z-index: 10;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
   }
 
-  /* Ensure inner .hero-content inside .container fills the bounded 45% wrapper seamlessly */
+  /* Ensure inner .hero-content inside .container fills the bounded 54% wrapper seamlessly */
   .hero-section > .container .hero-content,
   .hero-banner-inner .hero-content {
     width: 100% !important;
     max-width: 100% !important;
+    height: auto !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 0 0 12px 0 !important;
+    padding-bottom: 12px !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
     align-items: flex-start !important;
+    box-sizing: border-box !important;
   }
 
-  /* Fluid micro-scaling typography */
+  /* Fluid micro-scaling typography — tightened vertical spacing */
   .hero-section h1,
   .hero-section .hero-title {
-    font-size: clamp(0.75rem, 2.8vw, 2.5rem) !important;
-    line-height: 1.15 !important;
-    margin-bottom: clamp(4px, 1vw, 12px) !important;
+    font-size: clamp(1rem, 3.8vw, 1.5rem) !important;
+    line-height: 1.2 !important;
+    margin-bottom: 4px !important;
     font-weight: 700 !important;
     color: #FFFFFF !important;
     letter-spacing: -0.015em !important;
@@ -3448,28 +3454,33 @@ html.dark .mobile-nav-accord-body {
 
   .hero-section p,
   .hero-section .hero-subtitle {
-    font-size: clamp(0.45rem, 1.2vw, 0.95rem) !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    font-size: clamp(0.55rem, 1.8vw, 0.75rem) !important;
     line-height: 1.25 !important;
-    margin-bottom: clamp(6px, 1.2vw, 16px) !important;
-    color: #94A3B8 !important;
+    margin-bottom: 8px !important;
+    color: #cbd5e1 !important; /* Soft muted silver tone */
     text-align: left !important;
   }
 
   .hero-section .badge,
   .hero-section .hero-tag {
-    font-size: clamp(0.4rem, 1vw, 0.75rem) !important;
-    padding: clamp(1px, 0.4vw, 4px) clamp(4px, 1vw, 10px) !important;
-    margin-bottom: clamp(4px, 1vw, 8px) !important;
+    font-size: clamp(0.5rem, 1.6vw, 0.65rem) !important;
+    padding: 3px 8px !important;
+    margin-bottom: 4px !important;
     display: inline-flex !important;
     align-items: center !important;
-    gap: clamp(2px, 0.5vw, 4px) !important;
-    border-radius: var(--radius-full) !important;
+    gap: clamp(3px, 0.6vw, 5px) !important;
+    border-radius: 9999px !important;
     background: rgba(11, 12, 16, 0.65) !important;
     border: 1px solid rgba(212, 175, 55, 0.35) !important;
     color: #D4AF37 !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
-    letter-spacing: clamp(0.04em, 0.3vw, 0.12em) !important;
+    letter-spacing: clamp(0.04em, 0.3vw, 0.1em) !important;
+    line-height: 1.2 !important;
   }
 
   .hero-section .hero-tag-dot {
@@ -3480,27 +3491,31 @@ html.dark .mobile-nav-accord-body {
   .hero-section .hero-cta-group {
     display: flex !important;
     flex-direction: row !important;
-    flex-wrap: wrap !important;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
     align-items: center !important;
-    gap: clamp(3px, 0.8vw, 8px) !important;
-    margin: 0 !important;
+    justify-content: flex-start !important;
     width: 100% !important;
     max-width: 100% !important;
+    margin: 0 !important;
   }
 
   .hero-section .btn, .hero-section button, .hero-section a.button {
-    font-size: clamp(0.45rem, 1.1vw, 0.85rem) !important;
-    padding: clamp(3px, 0.8vw, 8px) clamp(6px, 1.4vw, 14px) !important;
-    border-radius: var(--radius-full) !important;
+    font-size: clamp(0.55rem, 1.6vw, 0.7rem) !important;
+    padding: 5px 10px !important;
+    border-radius: 9999px !important;
     white-space: nowrap !important;
-    gap: clamp(2px, 0.4vw, 5px) !important;
+    line-height: 1.2 !important;
+    gap: 4px !important;
+    flex-shrink: 1 !important;
   }
 
   .hero-section .btn svg,
   .hero-section button svg,
   .hero-section a.button svg {
-    width: clamp(8px, 1.1vw, 13px) !important;
-    height: clamp(8px, 1.1vw, 13px) !important;
+    width: clamp(9px, 1.2vw, 13px) !important;
+    height: clamp(9px, 1.2vw, 13px) !important;
+    flex-shrink: 0 !important;
   }
 
   .hero-section .stats-row,
