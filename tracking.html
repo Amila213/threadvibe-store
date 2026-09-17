@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Order Tracking & Courier Status | ThreadVibe Atelier</title>
+  <meta name="description" content="Track your ThreadVibe Atelier streetwear orders in real-time. View status updates, delivery estimates, and contact concierge on WhatsApp.">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z'/><path d='M3 6h18'/><path d='M16 10a4 4 0 0 1-8 0'/></svg>">
+
+  <!-- Google Fonts: Playfair Display + Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Main Storefront CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    /* Page-specific styles for tracking.html */
+    .tracking-page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-bg);
+      color: var(--color-text);
+      overflow-x: hidden;
+    }
+
+    .tracking-hero {
+      padding: clamp(2rem, 5vw, 3.5rem) 1rem 2rem;
+      text-align: center;
+      background: radial-gradient(circle at top, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .tracking-hero-container {
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .tracking-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      color: #818cf8;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .tracking-search-box {
+      margin-top: 1.5rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .tracking-search-box {
+        flex-direction: row;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        padding: 6px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    .tracking-input {
+      flex: 1;
+      padding: 0.85rem 1.15rem;
+      font-size: 0.92rem;
+      font-family: var(--font-body);
+      background: var(--color-surface);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      min-height: 44px;
+      box-sizing: border-box;
+    }
+
+    @media (min-width: 640px) {
+      .tracking-input {
+        border: none;
+        background: transparent;
+      }
+    }
+
+    .tracking-input:focus {
+      border-color: var(--color-accent);
+    }
+
+    .tracking-btn {
+      min-height: 44px;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .tracking-demo-pills {
+      margin-top: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    .demo-pill {
+      background: var(--color-surface-hover);
+      border: 1px solid var(--color-border);
+      color: var(--color-accent);
+      padding: 3px 10px;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .demo-pill:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: var(--color-accent);
+    }
+
+    /* Results section */
+    .tracking-content {
+      flex: 1;
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem;
+      box-sizing: border-box;
+    }
+
+    .tracking-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: clamp(1rem, 4vw, 1.75rem);
+      margin-bottom: 1.25rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      box-sizing: border-box;
+    }
+
+    /* Stepper */
+    .stepper-container {
+      margin: 1.5rem 0;
+      position: relative;
+    }
+
+    .stepper-track {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      position: relative;
+      gap: 6px;
+    }
+
+    .stepper-track::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 12%;
+      right: 12%;
+      height: 3px;
+      background: var(--color-border);
+      z-index: 1;
+    }
+
+    .stepper-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .step-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--color-surface);
+      border: 2px solid var(--color-border);
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      margin-bottom: 8px;
+    }
+
+    .stepper-step.completed .step-icon {
+      background: #10b981;
+      border-color: #10b981;
+      color: #ffffff;
+    }
+
+    .stepper-step.active .step-icon {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25);
+      animation: pulseStep 2s infinite;
+    }
+
+    @keyframes pulseStep {
+      0%, 100% { box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25); }
+      50% { box-shadow: 0 0 0 8px rgba(99, 102, 241, 0.1); }
+    }
+
+    .step-label {
+      font-size: clamp(0.7rem, 2.2vw, 0.82rem);
+      font-weight: 600;
+      color: var(--color-text-muted);
+      line-height: 1.25;
+    }
+
+    .stepper-step.completed .step-label,
+    .stepper-step.active .step-label {
+      color: var(--color-text);
+      font-weight: 700;
+    }
+
+    /* Details Grid */
+    .tracking-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+    }
+
+    @media (min-width: 768px) {
+      .tracking-grid {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+    }
+
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.85rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: var(--color-text-muted);
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    .info-val {
+      font-weight: 600;
+      text-align: right;
+      color: var(--color-text);
+      word-break: break-word;
+    }
+
+    .order-item-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .order-item-row:last-child {
+      border-bottom: none;
+    }
+
+    .order-item-thumb {
+      width: 48px;
+      height: 60px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      background: var(--color-surface-hover);
+      flex-shrink: 0;
+      border: 1px solid var(--color-border);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .status-pill.pending {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .status-pill.confirmed {
+      background: rgba(59, 130, 246, 0.15);
+      color: #3b82f6;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .status-pill.dispatched {
+      background: rgba(168, 85, 247, 0.15);
+      color: #a855f7;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .status-pill.delivered {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-pill.cancelled {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+  </style>
+</head>
+<body class="tracking-page-wrapper">
+
+  <!-- ==========================================================================
+       Global Storefront Navigation Header
+       ========================================================================== -->
+  <header class="header" id="header" style="position: sticky; top: 0; z-index: 50;">
+    <div class="header-container">
+      <!-- Logo Brand -->
+      <a href="/" class="brand-logo" aria-label="ThreadVibe Atelier Home">
+        <div class="brand-logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+        </div>
+        <div class="brand-logo-text">
+          <span class="brand-name">ThreadVibe</span>
+          <span class="brand-sub">Atelier LK</span>
+        </div>
+      </a>
+
+      <!-- Quick Nav Links -->
+      <nav class="nav-links" style="display: flex; align-items: center; gap: 1.5rem;">
+        <a href="/" class="nav-link">Shop Collection</a>
+        <a href="/tracking.html" class="nav-link active" style="color: var(--color-accent); font-weight: 600;">Track Order</a>
+        <a href="/admin.html" class="admin-pill-btn" title="Admin Portal">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          <span>Admin</span>
+        </a>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="header-actions">
+        <!-- Dark/Light Theme Toggle -->
+        <button class="icon-btn dark-mode-toggle" id="dark-mode-toggle" aria-label="Toggle Theme Mode" title="Toggle Theme">
+          <svg class="sun-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+          </svg>
+          <svg class="moon-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+          </svg>
+        </button>
+
+        <!-- WhatsApp VIP Concierge -->
+        <a href="https://wa.me/94771234567?text=Hello%20ThreadVibe%20Atelier%2C%20I%20have%20an%20order%20inquiry." target="_blank" class="icon-btn header-wa-btn" title="Concierge WhatsApp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+          </svg>
+        </a>
+
+        <!-- Return to Home Store -->
+        <a href="/" class="btn btn-secondary" style="min-height: 38px; padding: 0.45rem 0.9rem; font-size: 0.82rem;">
+          &larr; Store
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       Hero Section & Order Lookup Form
+       ========================================================================== -->
+  <section class="tracking-hero">
+    <div class="tracking-hero-container">
+      <div class="tracking-badge">
+        <span>📦 Atelier Dispatch &amp; Tracking</span>
+      </div>
+      <h1 class="hero-title" style="margin-bottom: 0.5rem;">Live Order Tracking</h1>
+      <p class="hero-subtitle" style="margin: 0 auto;">
+        Enter your 5-digit Order ID or contact number to track real-time courier dispatch and delivery status.
+      </p>
+
+      <form id="tracking-form" class="tracking-search-box" onsubmit="handleTrackSubmit(event)">
+        <input 
+          type="text" 
+          id="tracking-query" 
+          class="tracking-input" 
+          placeholder="e.g. TV-91271 or 0771234567" 
+          required 
+          autocomplete="off"
+        >
+        <button type="submit" id="track-btn" class="btn btn-primary tracking-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span>Find Order</span>
+        </button>
+      </form>
+
+      <div class="tracking-demo-pills">
+        <span>Quick Test:</span>
+        <button type="button" class="demo-pill" onclick="quickTrack('TV-91271')">#TV-91271</button>
+        <span id="last-order-pill-wrap" style="display:none;">
+          <button type="button" class="demo-pill" id="last-order-pill" onclick="quickTrack(this.dataset.id)">Your Recent Order</button>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       Tracking Result Content Area
+       ========================================================================== -->
+  <main class="tracking-content" id="tracking-content">
+    <!-- Initial Prompt State -->
+    <div id="state-initial" class="tracking-card" style="text-align: center; padding: 3rem 1.5rem;">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(99, 102, 241, 0.1); color: var(--color-accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="8"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+      </div>
+      <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Awaiting Order Identification</h3>
+      <p style="color: var(--color-text-muted); font-size: 0.88rem; max-width: 440px; margin: 0 auto 1.5rem;">
+        Please input your Order reference code (e.g. TV-91271) provided on checkout confirmation or via SMS/WhatsApp.
+      </p>
+      <a href="/" class="btn btn-secondary" style="min-height: 42px; display: inline-flex; align-items: center; gap: 8px;">
+        Browse New Drops &rarr;
+      </a>
+    </div>
+
+    <!-- Loading State -->
+    <div id="state-loading" class="tracking-card" style="display: none; text-align: center; padding: 3rem 1.5rem;">
+      <div class="spinner" style="margin: 0 auto 1rem; width: 32px; height: 32px; border: 3px solid rgba(99,102,241,0.2); border-top-color: var(--color-accent); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+      <h3 style="font-size: 1.1rem; margin-bottom: 0.35rem;">Locating Order Record...</h3>
+      <p style="color: var(--color-text-muted); font-size: 0.85rem;">Retrieving real-time status from ThreadVibe database.</p>
+    </div>
+
+    <!-- Error / Not Found State -->
+    <div id="state-error" class="tracking-card" style="display: none; text-align: center; padding: 2.5rem 1.5rem; border-color: rgba(239, 68, 68, 0.3);">
+      <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(239, 68, 68, 0.1); color: #ef4444; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <h3 style="font-size: 1.15rem; color: #ef4444; margin-bottom: 0.5rem;" id="error-title">Order Not Found</h3>
+      <p style="color: var(--color-text-muted); font-size: 0.88rem; max-width: 480px; margin: 0 auto 1.5rem;" id="error-desc">
+        We could not locate an active order matching this reference. Please verify your 5-digit Order ID (e.g. TV-91271) or contact our concierge.
+      </p>
+      <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+        <button type="button" onclick="document.getElementById('tracking-query').focus();" class="btn btn-secondary" style="min-height: 42px;">Try Again</button>
+        <a href="https://wa.me/94771234567?text=Hello%20ThreadVibe%2C%20I%20need%20assistance%20tracking%20my%20order." target="_blank" class="btn btn-whatsapp" style="min-height: 42px; display: inline-flex; align-items: center; gap: 8px;">
+          WhatsApp Concierge
+        </a>
+      </div>
+    </div>
+
+    <!-- Active Order Details Display -->
+    <div id="state-details" style="display: none;">
+      <!-- Order Banner Card -->
+      <div class="tracking-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 1.25rem;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
+              <h2 style="font-size: 1.35rem; font-weight: 700; margin: 0;" id="res-order-id">#TV-00000</h2>
+              <span class="status-pill pending" id="res-status-pill">Pending</span>
+            </div>
+            <p style="color: var(--color-text-muted); font-size: 0.82rem; margin: 0;">
+              Placed on <span id="res-order-date">September 17, 2026</span> &bull; <span id="res-payment-mode">Cash on Delivery</span>
+            </p>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 0.78rem; color: var(--color-text-muted); text-transform: uppercase; font-weight: 600;">Total Payable</div>
+            <div style="font-size: 1.35rem; font-weight: 700; color: var(--color-text);" id="res-total-amount">Rs. 0</div>
+          </div>
+        </div>
+
+        <!-- Visual 4-Step Stepper -->
+        <div class="stepper-container">
+          <div class="stepper-track">
+            <!-- Step 1: Placed -->
+            <div class="stepper-step completed" id="step-placed">
+              <div class="step-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span class="step-label">Order Placed</span>
+            </div>
+            <!-- Step 2: Confirmed -->
+            <div class="stepper-step" id="step-confirmed">
+              <div class="step-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <span class="step-label">Confirmed</span>
+            </div>
+            <!-- Step 3: Dispatched -->
+            <div class="stepper-step" id="step-dispatched">
+              <div class="step-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              </div>
+              <span class="step-label">Dispatched</span>
+            </div>
+            <!-- Step 4: Delivered -->
+            <div class="stepper-step" id="step-delivered">
+              <div class="step-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <span class="step-label">Delivered</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estimated Delivery Alert Box -->
+        <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: var(--radius-md); padding: 0.85rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 1.25rem;">🚚</span>
+            <div>
+              <div style="font-size: 0.84rem; font-weight: 600;">Estimated Delivery Window</div>
+              <div style="font-size: 0.78rem; color: var(--color-text-muted);" id="res-est-delivery">1 - 3 Business Days (Islandwide Courier)</div>
+            </div>
+          </div>
+          <a id="res-wa-link" href="#" target="_blank" class="btn btn-whatsapp" style="min-height: 38px; padding: 0.4rem 0.85rem; font-size: 0.8rem;">
+            Inquire on WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- Details Two-Column Grid -->
+      <div class="tracking-grid">
+        <!-- Delivery & Customer Information -->
+        <div class="tracking-card">
+          <h3 style="font-size: 1.05rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            Delivery &amp; Customer Details
+          </h3>
+          <div class="info-list">
+            <div class="info-row">
+              <span class="info-label">Customer Name</span>
+              <span class="info-val" id="res-cust-name">-</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Phone Number</span>
+              <span class="info-val" id="res-cust-phone">-</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Destination Address</span>
+              <span class="info-val" id="res-cust-address">-</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">District</span>
+              <span class="info-val" id="res-cust-district" style="text-transform: capitalize;">-</span>
+            </div>
+            <div class="info-row" id="res-notes-row" style="display:none;">
+              <span class="info-label">Delivery Instructions</span>
+              <span class="info-val" id="res-cust-notes">-</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Payment Method</span>
+              <span class="info-val" id="res-payment-val">Cash on Delivery (COD)</span>
+            </div>
+            <div class="info-row" id="res-slip-row" style="display:none;">
+              <span class="info-label">Payment Slip</span>
+              <span class="info-val"><a id="res-slip-link" href="#" target="_blank" style="color: var(--color-accent); text-decoration: underline;">View Uploaded Slip &nearr;</a></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ordered Items Summary -->
+        <div class="tracking-card">
+          <h3 style="font-size: 1.05rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            Ordered Streetwear (<span id="res-item-count">0</span>)
+          </h3>
+          
+          <div id="res-items-container" style="margin-bottom: 1rem; max-height: 280px; overflow-y: auto;">
+            <!-- Items rendered via JS -->
+          </div>
+
+          <!-- Price Calculation -->
+          <div style="border-top: 1px solid var(--color-border); padding-top: 0.85rem; display: flex; flex-direction: column; gap: 6px; font-size: 0.84rem;">
+            <div style="display: flex; justify-content: space-between; color: var(--color-text-muted);">
+              <span>Subtotal</span>
+              <span id="res-subtotal-val">Rs. 0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; color: var(--color-text-muted);">
+              <span>Islandwide Courier Fee</span>
+              <span id="res-delivery-val" style="color: var(--color-success); font-weight: 600;">FREE</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 700; color: var(--color-text); margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--color-border);">
+              <span>Net Amount</span>
+              <span id="res-net-val">Rs. 0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button Bar -->
+      <div style="display: flex; gap: 12px; margin-top: 1.25rem; flex-wrap: wrap;">
+        <a href="/" class="btn btn-primary" style="flex: 1; min-height: 42px; justify-content: center;">
+          Continue Shopping &rarr;
+        </a>
+        <button type="button" onclick="copyTrackingLink()" class="btn btn-secondary" style="min-height: 42px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+          Copy Tracking Link
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       Storefront Footer
+       ========================================================================== -->
+  <footer class="footer" style="margin-top: auto; border-top: 1px solid var(--color-border); padding: 2rem 1rem;">
+    <div style="max-width: 960px; margin: 0 auto; text-align: center; color: var(--color-text-muted); font-size: 0.82rem;">
+      <p style="margin-bottom: 0.5rem;">
+        &copy; 2026 ThreadVibe Atelier LK. Crafted for high-street aesthetics &amp; effortless islandwide delivery.
+      </p>
+      <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+        <a href="/" style="color: var(--color-text-muted); text-decoration: none;">Collection</a>
+        <a href="/tracking.html" style="color: var(--color-accent); text-decoration: none;">Order Tracking</a>
+        <a href="/admin.html" style="color: var(--color-text-muted); text-decoration: none;">Atelier Portal</a>
+        <a href="https://wa.me/94771234567" target="_blank" style="color: var(--color-text-muted); text-decoration: none;">Concierge Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Helper -->
+  <div id="toast-container" class="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
+  <style>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+
+  <!-- ==========================================================================
+       Client-Side Tracking Logic
+       ========================================================================== -->
+  <script>
+    // Theme initialization matching index.html
+    (function initTheme() {
+      const savedTheme = localStorage.getItem('tv_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeToggleIcons(savedTheme);
+
+      const toggleBtn = document.getElementById('dark-mode-toggle');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          const current = document.documentElement.getAttribute('data-theme');
+          const next = current === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          localStorage.setItem('tv_theme', next);
+          updateThemeToggleIcons(next);
+        });
+      }
+    })();
+
+    function updateThemeToggleIcons(theme) {
+      const sun = document.querySelector('.sun-icon');
+      const moon = document.querySelector('.moon-icon');
+      if (!sun || !moon) return;
+      if (theme === 'dark') {
+        sun.style.display = 'block';
+        moon.style.display = 'none';
+      } else {
+        sun.style.display = 'none';
+        moon.style.display = 'block';
+      }
+    }
+
+    // Check for recent order in localStorage
+    (function checkRecentOrder() {
+      const lastOrder = localStorage.getItem('tv_last_order');
+      if (lastOrder) {
+        const wrap = document.getElementById('last-order-pill-wrap');
+        const pill = document.getElementById('last-order-pill');
+        if (wrap && pill) {
+          pill.dataset.id = lastOrder;
+          pill.textContent = `#${lastOrder} (Your Order)`;
+          wrap.style.display = 'inline-flex';
+        }
+      }
+    })();
+
+    // Auto-search from URL query parameters (e.g. tracking.html?orderId=TV-91271)
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('orderId') || params.get('id') || params.get('phone');
+      if (q) {
+        document.getElementById('tracking-query').value = q;
+        fetchAndRenderOrder(q.trim());
+      }
+    });
+
+    function quickTrack(id) {
+      document.getElementById('tracking-query').value = id;
+      fetchAndRenderOrder(id);
+    }
+
+    function handleTrackSubmit(e) {
+      e.preventDefault();
+      const query = document.getElementById('tracking-query').value.trim();
+      if (!query) return;
+      fetchAndRenderOrder(query);
+    }
+
+    async function fetchAndRenderOrder(query) {
+      showState('loading');
+      
+      try {
+        // First attempt direct lookup via /api/orders/:id
+        let res = await fetch(`/api/orders/${encodeURIComponent(query)}`);
+        let order = null;
+
+        if (res.ok) {
+          order = await res.json();
+        } else {
+          // If not found by direct ID, check if user searched by phone number or lowercase order ID
+          const allRes = await fetch('/api/orders');
+          if (allRes.ok) {
+            const allOrders = await allRes.json();
+            const cleanQ = query.toLowerCase().replace(/[\s\-\+]/g, '');
+            order = allOrders.find(o => {
+              const oId = String(o.orderId || '').toLowerCase().replace(/[\s\-\+]/g, '');
+              const phone = String(o.customerPhone || o.customer?.phone || '').replace(/[\s\-\+]/g, '');
+              return oId === cleanQ || phone === cleanQ || (cleanQ.length >= 7 && phone.includes(cleanQ));
+            });
+          }
+        }
+
+        if (!order || (!order.orderId && !order._id)) {
+          showError('Order Not Found', `We could not locate an order matching "${query}". Please check your order confirmation code or reach out to our concierge.`);
+          return;
+        }
+
+        renderOrderDetails(order);
+        showState('details');
+
+        // Update URL query string without reloading page
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('orderId', order.orderId || order._id);
+        window.history.replaceState({}, '', newUrl);
+
+      } catch (err) {
+        console.error('Tracking fetch error:', err);
+        showError('Network Connection Error', 'Unable to reach the ThreadVibe order servers. Please verify your connection and try again.');
+      }
+    }
+
+    function renderOrderDetails(order) {
+      const orderId = order.orderId || order.id || order._id;
+      const status = (order.status || order.orderStatus || 'pending').toLowerCase();
+      const items = Array.isArray(order.items) ? order.items : [];
+      const subtotal = Number(order.subtotal) || 0;
+      const delivery = Number(order.deliveryFee) || 0;
+      const total = Number(order.total || order.totalAmount) || (subtotal + delivery);
+
+      // Header summary
+      document.getElementById('res-order-id').textContent = `#${orderId}`;
+      
+      const statusPill = document.getElementById('res-status-pill');
+      statusPill.className = `status-pill ${status}`;
+      statusPill.textContent = status.toUpperCase();
+
+      const orderDate = order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-US', {
+        month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      }) : 'Recently Placed';
+      document.getElementById('res-order-date').textContent = orderDate;
+
+      const isBank = order.paymentMethod === 'bank';
+      document.getElementById('res-payment-mode').textContent = isBank ? 'Bank Transfer' : 'Cash on Delivery';
+      document.getElementById('res-payment-val').textContent = isBank ? 'Bank Transfer (Deposit / Slip)' : 'Cash on Delivery (COD)';
+
+      if (isBank && (order.slipUrl || order.bankSlipUrl)) {
+        document.getElementById('res-slip-row').style.display = 'flex';
+        document.getElementById('res-slip-link').href = order.slipUrl || order.bankSlipUrl;
+      } else {
+        document.getElementById('res-slip-row').style.display = 'none';
+      }
+
+      document.getElementById('res-total-amount').textContent = `Rs. ${total.toLocaleString()}`;
+      document.getElementById('res-subtotal-val').textContent = `Rs. ${subtotal.toLocaleString()}`;
+      document.getElementById('res-delivery-val').textContent = delivery === 0 ? 'FREE' : `Rs. ${delivery.toLocaleString()}`;
+      document.getElementById('res-net-val').textContent = `Rs. ${total.toLocaleString()}`;
+
+      // Customer details
+      const cust = order.customer || {};
+      document.getElementById('res-cust-name').textContent = cust.name || order.customerName || 'Atelier Client';
+      document.getElementById('res-cust-phone').textContent = cust.phone || order.customerPhone || 'N/A';
+      document.getElementById('res-cust-address').textContent = cust.address || order.address || 'Address provided on file';
+      document.getElementById('res-cust-district').textContent = cust.district || cust.city || 'Western Province';
+
+      if (cust.notes) {
+        document.getElementById('res-notes-row').style.display = 'flex';
+        document.getElementById('res-cust-notes').textContent = cust.notes;
+      } else {
+        document.getElementById('res-notes-row').style.display = 'none';
+      }
+
+      // Stepper calculation: pending -> confirmed -> dispatched -> delivered
+      updateStepper(status);
+
+      // WhatsApp Concierge Link
+      const waMsg = `Hello ThreadVibe! I am checking status on my Order #${orderId} (${cust.name || 'Client'}). Could you please provide courier tracking updates?`;
+      document.getElementById('res-wa-link').href = `https://wa.me/94771234567?text=${encodeURIComponent(waMsg)}`;
+
+      // Items list
+      document.getElementById('res-item-count').textContent = items.length;
+      const itemsContainer = document.getElementById('res-items-container');
+      itemsContainer.innerHTML = '';
+
+      if (items.length === 0) {
+        itemsContainer.innerHTML = '<p style="color:var(--color-text-muted); font-size:0.85rem; padding: 10px 0;">Items record archived.</p>';
+      } else {
+        items.forEach(item => {
+          const itemQty = Number(item.qty || item.quantity) || 1;
+          const itemPrice = Number(item.price) || 0;
+          const row = document.createElement('div');
+          row.className = 'order-item-row';
+          row.innerHTML = `
+            <div style="width: 44px; height: 54px; border-radius: 6px; background: rgba(99,102,241,0.1); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <span style="font-size: 1.25rem;">👕</span>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-weight: 600; font-size: 0.88rem; color: var(--color-text); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                ${escapeHtml(item.name || 'ThreadVibe Streetwear Piece')}
+              </div>
+              <div style="font-size: 0.76rem; color: var(--color-text-muted); margin-top: 2px;">
+                Size: <span style="font-weight: 600; color: var(--color-text);">${item.size || 'M'}</span> &bull; Qty: ${itemQty}
+              </div>
+            </div>
+            <div style="text-align: right; flex-shrink: 0;">
+              <div style="font-weight: 700; font-size: 0.88rem; color: var(--color-text);">
+                Rs. ${(itemPrice * itemQty).toLocaleString()}
+              </div>
+              <div style="font-size: 0.72rem; color: var(--color-text-muted);">
+                Rs. ${itemPrice.toLocaleString()} ea
+              </div>
+            </div>
+          `;
+          itemsContainer.appendChild(row);
+        });
+      }
+    }
+
+    function updateStepper(status) {
+      const steps = ['step-placed', 'step-confirmed', 'step-dispatched', 'step-delivered'];
+      steps.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.classList.remove('completed', 'active');
+        }
+      });
+
+      const sPlaced = document.getElementById('step-placed');
+      const sConf = document.getElementById('step-confirmed');
+      const sDisp = document.getElementById('step-dispatched');
+      const sDelv = document.getElementById('step-delivered');
+
+      if (status === 'pending') {
+        sPlaced.classList.add('completed');
+        sConf.classList.add('active');
+        document.getElementById('res-est-delivery').textContent = 'Order logged. Awaiting confirmation call / WhatsApp.';
+      } else if (status === 'confirmed') {
+        sPlaced.classList.add('completed');
+        sConf.classList.add('completed');
+        sDisp.classList.add('active');
+        document.getElementById('res-est-delivery').textContent = 'Order verified. Packaging & dispatching within 24 hours.';
+      } else if (status === 'dispatched') {
+        sPlaced.classList.add('completed');
+        sConf.classList.add('completed');
+        sDisp.classList.add('completed');
+        sDelv.classList.add('active');
+        document.getElementById('res-est-delivery').textContent = 'Out for courier delivery. Expect arrival within 1-2 days.';
+      } else if (status === 'delivered') {
+        sPlaced.classList.add('completed');
+        sConf.classList.add('completed');
+        sDisp.classList.add('completed');
+        sDelv.classList.add('completed');
+        document.getElementById('res-est-delivery').textContent = 'Successfully delivered to recipient. Thank you for choosing ThreadVibe!';
+      } else {
+        // e.g. cancelled
+        sPlaced.classList.add('completed');
+        document.getElementById('res-est-delivery').textContent = 'Order cancelled or archived.';
+      }
+    }
+
+    function showState(state) {
+      document.getElementById('state-initial').style.display = state === 'initial' ? 'block' : 'none';
+      document.getElementById('state-loading').style.display = state === 'loading' ? 'block' : 'none';
+      document.getElementById('state-error').style.display = state === 'error' ? 'block' : 'none';
+      document.getElementById('state-details').style.display = state === 'details' ? 'block' : 'none';
+    }
+
+    function showError(title, desc) {
+      document.getElementById('error-title').textContent = title;
+      document.getElementById('error-desc').textContent = desc;
+      showState('error');
+    }
+
+    function copyTrackingLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        showToast('Tracking link copied to clipboard!', 'success');
+      }).catch(() => {
+        showToast('Could not copy link.', 'error');
+      });
+    }
+
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const t = document.createElement('div');
+      t.className = `toast ${type === 'success' ? 'toast-success' : ''}`;
+      t.style.cssText = 'background: #1e293b; color: white; padding: 10px 16px; border-radius: 8px; font-size: 0.85rem; margin-top: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px;';
+      t.innerHTML = `<span>${type === 'success' ? '✓' : 'ℹ'}</span><span>${msg}</span>`;
+      container.appendChild(t);
+      setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => t.remove(), 300);
+      }, 3000);
+    }
+
+    function escapeHtml(text) {
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+      return String(text).replace(/[&<>"']/g, m => map[m]);
+    }
+  </script>
+</body>
+</html>

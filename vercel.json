@@ -11,6 +11,7 @@
           "uploads/**",
           "data/**",
           "admin.html",
+          "tracking.html",
           "index.html"
         ]
       }

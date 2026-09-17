@@ -517,6 +517,11 @@ app.get(['/admin', '/admin.html', '/admin/'], (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
+// Explicitly serve /tracking, /tracking.html, /tracking/
+app.get(['/tracking', '/tracking.html', '/tracking/'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'tracking.html'));
+});
+
 app.use(express.static(path.join(__dirname)));
 
 app.get('/', (req, res) => {
