@@ -2155,7 +2155,6 @@ html.dark .mobile-nav-accord-body {
 }
 
 /* ==========================================================================
-/* ==========================================================================
    Slide-over Cart Drawer — Atelier Minimalist Bag
    ========================================================================== */
 .drawer-backdrop {
@@ -3406,7 +3405,6 @@ html.dark .mobile-nav-accord-body {
   }
 
   /* Header & Navigation */
-  /* Header & Navigation */
   .header {
     width: 100%;
     box-sizing: border-box;
@@ -3507,9 +3505,6 @@ html.dark .mobile-nav-accord-body {
     flex-shrink: 0 !important;
     color: var(--color-text-main);
   }
-
-  /* Hero mobile styles refactored to unified mobile block at bottom of file */
-
 
   /* Trust Strip */
   .trust-strip {
@@ -3977,8 +3972,6 @@ html.dark .mobile-nav-accord-body {
     position: relative;
     padding-top: 0.5rem;
   }
-
-  /* Modal navigation refactored to unified mobile block at bottom of file */
 
   .checkout-form-panel {
     padding: 1.25rem 1rem;
@@ -4872,18 +4865,15 @@ html.dark .admin-pill-btn:hover {
   gap: 0.45rem;
   border: 1px solid var(--color-border);
   color: #1e293b;
-  /* slate-800: crisp dark text on white card */
 }
 
 .quickview-spec-card div {
   color: #334155;
-  /* slate-700 */
   line-height: 1.5;
 }
 
 .quickview-spec-card strong {
   color: #0f172a;
-  /* slate-900 */
   font-weight: 700;
 }
 
@@ -5003,7 +4993,6 @@ html.dark .quickview-action-bar .btn-qv-add:hover {
    ========================================================================== */
 @media (max-width: 600px) {
   body {
-    /* Mobile: header only, no announcement bar */
     padding-top: 66px;
   }
 
@@ -5016,235 +5005,57 @@ html.dark .quickview-action-bar .btn-qv-add:hover {
    Single Unified Mobile Stylesheet (Conflict-Free Clean Mobile Refactor)
    ========================================================================== */
 @media (max-width: 768px) {
-  /* 1. Hero Container Locked to 16:9 Aspect Ratio */
+
+  /* Image එක දිගට ඇදෙන්නේ නැතුව නියම ගානට තියාගැනීම */
   .hero-section {
-    position: relative !important;
     width: 100% !important;
     aspect-ratio: 16 / 9 !important;
     height: auto !important;
     min-height: 0 !important;
     max-height: none !important;
     overflow: hidden !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    background-image: url('/uploads/1.jpg') !important;
-    background-size: cover !important;
     background-position: right center !important;
-    background-repeat: no-repeat !important;
-    box-sizing: border-box !important;
+    background-size: cover !important;
   }
 
-  .hero-section .hero-bg-overlay {
-    position: absolute !important;
-    inset: 0 !important;
-    background: linear-gradient(
-      to right,
-      rgba(11, 12, 16, 0.95) 0%,
-      rgba(11, 12, 16, 0.8) 32%,
-      rgba(11, 12, 16, 0.35) 48%,
-      transparent 65%
-    ) !important;
-    pointer-events: none !important;
-    z-index: 1 !important;
-  }
-
-  .hero-section .hero-bottom-fade {
-    display: none !important;
-  }
-
-  .hero-section .container,
-  .hero-section .hero-banner-inner,
-  .hero-section .hero-inner {
-    position: relative !important;
-    z-index: 2 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  /* 2. Left Overlay Content Strictly Clamped to 48% */
-  .hero-section .hero-content,
-  .hero-section .hero-banner-inner .hero-content,
-  .hero-section > .container .hero-content {
-    width: 48% !important;
-    max-width: 48% !important;
-    height: 100% !important;
-    padding-left: 12px !important;
-    padding-right: 6px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    margin: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: flex-start !important;
-    box-sizing: border-box !important;
-    z-index: 2 !important;
-    overflow: hidden !important;
-  }
-
-  /* 3. Responsive Fluid Fonts & Elements (Model Safe) */
-  .hero-section .hero-tag {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 4px !important;
-    background: rgba(11, 12, 16, 0.7) !important;
-    border: 1px solid rgba(212, 175, 55, 0.4) !important;
-    border-radius: var(--radius-full) !important;
-    padding: clamp(1px, 0.4vw, 3px) clamp(4px, 1vw, 7px) !important;
-    font-size: clamp(0.4rem, 1.3vw, 0.58rem) !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.06em !important;
-    color: #D4AF37 !important;
-    margin-bottom: clamp(2px, 0.6vw, 6px) !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    max-width: 100% !important;
-    line-height: 1.2 !important;
-  }
-
-  .hero-section .hero-tag-dot {
-    width: clamp(3px, 0.8vw, 5px) !important;
-    height: clamp(3px, 0.8vw, 5px) !important;
-    background: #D4AF37 !important;
-    border-radius: 50% !important;
-    flex-shrink: 0 !important;
-  }
-
-  .hero-section h1,
-  .hero-section .hero-title {
-    font-family: var(--font-heading) !important;
-    font-size: clamp(0.72rem, 2.9vw, 1.3rem) !important;
-    line-height: 1.15 !important;
-    font-weight: 800 !important;
-    letter-spacing: -0.015em !important;
-    color: #ffffff !important;
-    margin: 0 0 clamp(2px, 0.6vw, 6px) 0 !important;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
-    word-break: normal !important;
-    overflow-wrap: break-word !important;
-    max-width: 100% !important;
-  }
-
-  .hero-section p,
-  .hero-section .hero-subtitle {
-    font-family: var(--font-sans) !important;
-    font-size: clamp(0.46rem, 1.6vw, 0.7rem) !important;
-    line-height: 1.25 !important;
-    color: #cbd5e1 !important;
-    margin: 0 0 clamp(3px, 1vw, 8px) 0 !important;
-    max-width: 100% !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
-  }
-
-  .hero-section .hero-cta-group {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    gap: clamp(3px, 0.8vw, 6px) !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  .hero-section .hero-cta-group .btn,
-  .hero-section .btn {
-    padding: clamp(3px, 0.7vw, 6px) clamp(5px, 1.2vw, 10px) !important;
-    font-size: clamp(0.45rem, 1.4vw, 0.62rem) !important;
-    min-height: unset !important;
-    height: auto !important;
-    letter-spacing: 0.03em !important;
-    font-weight: 700 !important;
-    border-radius: var(--radius-full) !important;
-    white-space: nowrap !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 3px !important;
-    box-sizing: border-box !important;
-  }
-
-  .hero-section .btn.btn-accent {
-    background: var(--color-accent) !important;
-    color: #0B0C10 !important;
-    border: 1px solid var(--color-accent) !important;
-    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3) !important;
-  }
-
-  .hero-section .btn.btn-outline-white {
-    background: rgba(11, 12, 16, 0.6) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-  }
-
-  .hero-section .hero-cta-group .btn svg,
-  .hero-section .btn svg {
-    width: clamp(8px, 1.4vw, 11px) !important;
-    height: clamp(8px, 1.4vw, 11px) !important;
-    flex-shrink: 0 !important;
-  }
-
+  /* Image එක වැහෙන අමතර කෑලි mobile එකෙන් hide කිරීම */
+  .hero-tag,
+  .hero-section .hero-tag,
   .hero-section .hero-stats {
     display: none !important;
   }
 
-  /* 4. Product Modal: Explicit Absolute Positioned ✕ Close Button */
-  .modal-close-btn,
-  .product-modal-close,
-  #quickview-close-btn,
-  .modal-card .modal-close-btn,
-  .checkout-modal-card .modal-close-btn {
-    position: absolute !important;
-    top: 15px !important;
-    right: 15px !important;
-    z-index: 9999 !important;
-    font-size: 24px !important;
-    cursor: pointer !important;
-    color: white !important;
-    background: rgba(11, 12, 16, 0.75) !important;
-    border: 1px solid rgba(255, 255, 255, 0.35) !important;
-    border-radius: 50% !important;
-    width: 36px !important;
-    height: 36px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    line-height: 1 !important;
-    padding: 0 !important;
-    transition: transform var(--transition-fast), background var(--transition-fast) !important;
+  /* කළු සෙවණැල්ල වම් පැත්තේ 50% ට සීමා කිරීම */
+  .hero-section .hero-bg-overlay {
+    background: linear-gradient(to right,
+        rgba(11, 12, 16, 0.95) 0%,
+        rgba(11, 12, 16, 0.85) 45%,
+        rgba(11, 12, 16, 0.2) 60%,
+        transparent 75%) !important;
   }
 
-  .modal-close-btn:hover,
-  .product-modal-close:hover,
-  #quickview-close-btn:hover,
-  .modal-card .modal-close-btn:hover {
-    background: var(--color-accent) !important;
-    color: #0B0C10 !important;
-    border-color: var(--color-accent) !important;
-    transform: scale(1.08) !important;
+  /* 1. Main Title එකේ (Elevated Streetwear...) font size එක */
+  .hero-section h1,
+  .hero-section .hero-title {
+    font-size: 1.15rem !important;
+    /* මෙතනින් කැමති ගානට ලොකු/පොඩි කරන්න (උදා: 1.1rem හෝ 1.2rem) */
+    line-height: 1.25 !important;
+    margin-bottom: 5px !important;
   }
 
-  .modal-close-btn svg,
-  #quickview-close-btn svg {
-    width: 18px !important;
-    height: 18px !important;
+  /* 2. Subtitle එකේ (Curated oversized...) font size එක */
+  .hero-section p,
+  .hero-section .hero-subtitle {
+    font-size: 0.68rem !important;
+    /* මෙතනින් විස්තරයේ අකුරු සයිස් එක වෙනස් කරන්න */
+    line-height: 1.35 !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* 3. Buttons වල font size එක */
+  .hero-section .hero-cta-group .btn,
+  .hero-section .btn {
+    font-size: 0.65rem !important;
+    /* මෙතනින් Button එක ඇතුළේ අකුරු සයිස් එක වෙනස් කරන්න */
   }
 }
