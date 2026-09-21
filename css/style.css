@@ -5055,7 +5055,7 @@ html.dark .quickview-action-bar .btn-qv-add:hover {
   /* 3. Buttons වල font size එක */
   .hero-section .hero-cta-group .btn,
   .hero-section .btn {
-    font-size: 0.65rem !important;
+    font-size: 0.60rem !important;
     /* මෙතනින් Button එක ඇතුළේ අකුරු සයිස් එක වෙනස් කරන්න */
   }
 }
