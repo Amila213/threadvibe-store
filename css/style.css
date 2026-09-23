@@ -4991,115 +4991,140 @@ html.dark .quickview-action-bar .btn-qv-add:hover {
 /* ==========================================================================
    Mobile Responsive: body padding adjustment for smaller screens
    ========================================================================== */
+/* =========================================================
+   1. පොදු Mobile Styles (Max-width: 768px දක්වා හැම එකටම)
+   ========================================================= */
 @media (max-width: 768px) {
-  /* 1. Hero Container එක නියම 16:9 Ratio එකට තබාගැනීම */
-  .hero-section {
-    width: 100% !important;
-    aspect-ratio: 16 / 9 !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow: hidden !important;
-    background-position: right center !important;
-    background-size: cover !important;
-    position: relative !important;
-    display: flex !important;
-    align-items: stretch !important; /* Content එක මුළු උස පුරාම දිගහැරෙන්න */
-  }
 
-  /* 2. අනවශ්‍ය කොටස් Hide කිරීම */
-  .hero-section .btn-outline-white,
-  .hero-tag,
-  .hero-section .hero-tag,
-  .hero-section .hero-stats {
-    display: none !important;
-  }
+    /* Hero Image එක Lock කිරීම */
+    .hero-section {
+        width: 100% !important;
+        aspect-ratio: 16 / 9 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: hidden !important;
+        background-position: right center !important;
+        background-size: cover !important;
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+    }
 
-  /* 3. කළු Gradient එක */
-  .hero-section .hero-bg-overlay {
-    background: linear-gradient(
-      to right,
-      rgba(11, 12, 16, 0.98) 0%,
-      rgba(11, 12, 16, 0.88) 46%,
-      rgba(11, 12, 16, 0.2) 62%,
-      transparent 78%
-    ) !important;
-  }
+    /* අනවශ්‍ය කෑලි Hide කිරීම */
+    .hero-section .btn-outline-white,
+    .hero-tag,
+    .hero-section .hero-tag,
+    .hero-section .hero-stats {
+        display: none !important;
+    }
 
-  /* 4. Text Container එක උඩ සිට යට දක්වා සම්පූර්ණයෙන්ම බෙදාහැරීම */
-  .hero-section .hero-content,
-  .hero-section .hero-banner-inner .hero-content,
-  .hero-section > .container .hero-content {
-    width: 55% !important;
-    max-width: 55% !important;
-    height: 100% !important;
-    padding-left: 14px !important;
-    padding-right: 0 !important;
-    padding-top: 14px !important;    /* අකුරු උඩටම තල්ලු කරනවා */
-    padding-bottom: 12px !important; /* Button එක යටටම තල්ලු කරනවා */
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important; /* උඩ/යට ඉඩ සමසේ බෙදාගන්නවා */
-    align-items: flex-start !important;
-    box-sizing: border-box !important;
-    z-index: 2 !important;
-  }
+    /* කළු Gradient එක */
+    .hero-section .hero-bg-overlay {
+        background: linear-gradient(to right,
+                rgba(11, 12, 16, 0.98) 0%,
+                rgba(11, 12, 16, 0.88) 46%,
+                rgba(11, 12, 16, 0.2) 62%,
+                transparent 78%) !important;
+    }
 
-  /* 5. Main Title එක ලොකු කර පැහැදිලිව තැබීම */
-  .hero-section h1,
-  .hero-section .hero-title {
-    font-family: var(--font-heading) !important;
-    font-size: clamp(1.05rem, 4vw, 1.3rem) !important;
-    line-height: 1.18 !important;
-    font-weight: 800 !important;
-    color: #ffffff !important;
-    margin: 0 0 4px 0 !important;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9) !important;
-  }
+    /* Text Container */
+    .hero-section .hero-content,
+    .hero-section .hero-banner-inner .hero-content,
+    .hero-section>.container .hero-content {
+        width: 54% !important;
+        max-width: 54% !important;
+        height: auto !important;
+        padding-left: 14px !important;
+        padding-right: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        box-sizing: border-box !important;
+        z-index: 2 !important;
+    }
 
-  /* 6. Subtitle එක */
-  .hero-section p,
-  .hero-section .hero-subtitle {
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    font-family: var(--font-sans) !important;
-    font-size: 0.66rem !important;
-    line-height: 1.35 !important;
-    color: #cbd5e1 !important;
-    margin: 0 !important;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8) !important;
-  }
+    /* Main Title */
+    .hero-section h1,
+    .hero-section .hero-title {
+        font-family: var(--font-heading) !important;
+        font-size: clamp(0.95rem, 3.8vw, 1.22rem) !important;
+        line-height: 1.2 !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
+        margin: 0 0 6px 0 !important;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9) !important;
+    }
 
-  /* 7. Button එක */
-  .hero-section .hero-cta-group {
-    display: inline-flex !important;
-    width: auto !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
+    /* Subtitle (සාමාන්‍ය ලොකු Screen වල පෙන්වීමට) */
+    .hero-section p,
+    .hero-section .hero-subtitle {
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        font-family: var(--font-sans) !important;
+        font-size: 0.64rem !important;
+        line-height: 1.32 !important;
+        color: #cbd5e1 !important;
+        margin: 0 0 10px 0 !important;
+    }
 
-  .hero-section .hero-cta-group .btn.btn-accent,
-  .hero-section .btn.btn-accent {
-    padding: 7px 16px !important;
-    font-size: 0.65rem !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.05em !important;
-    border-radius: 9999px !important;
-    gap: 6px !important;
-    line-height: 1.2 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    white-space: nowrap !important;
-    box-sizing: border-box !important;
-  }
+    /* Single CTA Button */
+    .hero-section .hero-cta-group {
+        display: inline-flex !important;
+        width: auto !important;
+        margin: 0 !important;
+    }
 
-  .hero-section .hero-cta-group .btn svg,
-  .hero-section .btn svg {
-    width: 12px !important;
-    height: 12px !important;
-    flex-shrink: 0 !important;
-  }
+    .hero-section .hero-cta-group .btn.btn-accent,
+    .hero-section .btn.btn-accent {
+        padding: 6px 14px !important;
+        font-size: 0.62rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.04em !important;
+        border-radius: 9999px !important;
+        gap: 6px !important;
+        line-height: 1.2 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        white-space: nowrap !important;
+    }
+
+    .hero-section .hero-cta-group .btn svg,
+    .hero-section .btn svg {
+        width: 11px !important;
+        height: 11px !important;
+        flex-shrink: 0 !important;
+    }
+}
+
+/* =========================================================
+   2. ඉඩ මදි පොඩි Phones වලට (Width < 420px: Fold, S8+, SE ආදිය)
+   ========================================================= */
+@media (max-width: 420px) {
+
+    /* ඉඩ මදි හින්දා Subtitle එක auto hide වෙනවා */
+    .hero-section p,
+    .hero-section .hero-subtitle {
+        display: none !important;
+    }
+
+    /* Title එක සහ Button එක විතරක් Center එකේ ලස්සනට සෙට් වෙන්න */
+    .hero-section h1,
+    .hero-section .hero-title {
+        font-size: 1.05rem !important;
+        line-height: 1.22 !important;
+        margin-bottom: 12px !important;
+        /* Button එකට ලස්සන පරතරයක් */
+    }
+
+    .hero-section .hero-cta-group .btn.btn-accent,
+    .hero-section .btn.btn-accent {
+        padding: 6px 13px !important;
+        font-size: 0.60rem !important;
+    }
 }
